@@ -7,13 +7,15 @@
 //
 
 #define kDefaultPageVCCacheCount 3
+#define kFlipAnimationTime 0.3
 
 #import "XXSYFlipAnimationController.h"
 #import "XXSYPageViewController.h"
 typedef BOOL (^XXSYFlipGestureShouldRecognizeTouchBlock)(XXSYFlipAnimationController * drawerController, UIGestureRecognizer * gesture, UITouch * touch);
 typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * drawerController, UIGestureRecognizer * gesture);
-typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect);
+typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint);
 
+typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection);
 #pragma mark -
 
 @interface PageAnimationView : UIView
@@ -43,6 +45,8 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
 @property (strong,nonatomic) XXSYFlipGestureShouldRecognizeTouchBlock gestureShouldRecognizeTouch;
 @property (strong,nonatomic) XXSYFlipGestureCompletionBlock gestureCompletion;
 @property (strong,nonatomic) VisualCustomAnimationBlock visualCustomAnimationBlock;
+@property (strong,nonatomic) CustomAnimationStatusBlock customAnimationBeginStatusBlock;
+@property (strong,nonatomic) CustomAnimationStatusBlock customAnimationFinishedStatusBlock;
 ///缓存PageAnimationView，实现重复使用,index = 0表示最上面
 @property (strong,nonatomic) NSMutableArray *reusePageAnimationViewArray;
 
@@ -195,42 +199,85 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
     [pageVC flipAnimationStatusChanged:NO];
     [pageVC didCancelMoveToFront];
 }
+
+#pragma mark - Gesture Helpers
+
+-(void)tapGestureAfterAnimationBegining:(UITapGestureRecognizer *)tapGesture{
+    XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
+    XXSYPageViewController *currentPageVC = [self currentPageVC];
+    if (!needPageVC) {
+        return;
+    }
+    [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
+    self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromLeftToRight);
+    
+    [tapGesture setEnabled:NO];
+    [UIView animateWithDuration:kFlipAnimationTime animations:^{
+        
+        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromLeftToRight,needPageVC.view.superview.frame,(CGPoint){CGRectGetWidth(self.view.bounds),0});
+        
+    } completion:^(BOOL finished) {
+        
+        [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+        self.customAnimationFinishedStatusBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromLeftToRight);
+        
+        //            //OR
+        //            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
+        
+        [tapGesture setEnabled:YES];
+    }];
+}
+
+-(void)tapGestureBeforeAnimationBegining:(UITapGestureRecognizer *)tapGesture{
+    XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
+    XXSYPageViewController *currentPageVC = [self currentPageVC];
+    if (!needPageVC) {
+        return;
+    }
+    [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
+    self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromRightToLeft);
+    
+    [tapGesture setEnabled:NO];
+    [UIView animateWithDuration:kFlipAnimationTime animations:^{
+        
+        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromRightToLeft,needPageVC.view.superview.frame,(CGPoint){-CGRectGetWidth(self.view.bounds),0});
+        
+    } completion:^(BOOL finished) {
+        
+        [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
+        self.customAnimationFinishedStatusBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromRightToLeft);
+        
+        //            //OR
+        //            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
+        
+        [tapGesture setEnabled:YES];
+    }];
+}
+
 #pragma mark - Gesture Handlers
 
 -(void)tapGestureCallback:(UITapGestureRecognizer *)tapGesture{
     CGPoint point = [tapGesture locationInView:tapGesture.view];
     if ([self.touchAfterBezierPath containsPoint:point]) {
         ///下翻页
-        XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
-        XXSYPageViewController *currentPageVC = [self currentPageVC];
-        if (!needPageVC) {
-            return;
-        }
-        [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
-        [UIView animateWithDuration:0.5 animations:^{
-            
-        } completion:^(BOOL finished) {
-            [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
-            //OR
-            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
-        }];
-        
+        [self tapGestureAfterAnimationBegining:tapGesture];
         return;
     }
+    
     if ([self.touchCenterBezierPath containsPoint:point]) {
         ///中
-        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(flipAnimationControllerPopupMenu:)]) {
+            [self.delegate flipAnimationControllerPopupMenu:self];
+        }
         return;
     }
+    
     if ([self.touchBeforeBezierPath containsPoint:point]) {
         ///上翻页
-        XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
-        if (!needPageVC) {
-            return;
-        }
-        
+        [self tapGestureBeforeAnimationBegining:tapGesture];
         return;
     }
+    
 }
 
 -(void)panGestureCallback:(UIPanGestureRecognizer *)panGesture{
@@ -277,8 +324,12 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
     }
 }
 
--(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect))visualAnimationBlock{
+-(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock
+       withAnimationBeginStatusBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection))animationBeginStatus
+          withAnimationFinishedBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection))animationFinishedStatus{
     _visualCustomAnimationBlock = visualAnimationBlock;
+    _customAnimationBeginStatusBlock = animationBeginStatus;
+    _customAnimationFinishedStatusBlock = animationFinishedStatus;
 }
 #pragma mark - property
 -(NSMutableArray *)reusePageAnimationViewArray{

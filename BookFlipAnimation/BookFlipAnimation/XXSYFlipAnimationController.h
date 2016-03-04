@@ -35,7 +35,8 @@
 @end
 
 @protocol XXSYFlipAnimationControllerDelegate <NSObject>
-
+///弹出阅读菜单
+-(void)flipAnimationControllerPopupMenu:(XXSYFlipAnimationController*)animationController;
 @end
 
 #pragma mark -
@@ -56,7 +57,8 @@
 -(void)changeFlipAnimationType:(FlipAnimationType)animationType;
 
 ///自定义动画，上下拖动（uiscrollview实现）和仿真（uipageviewcontroller实现）除外
--(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect))visualAnimationBlock;
+-(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock withAnimationBeginStatusBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection))animationBeginStatus withAnimationFinishedBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection))animationFinishedStatus;
+
 #pragma mark -
 
 -(NSArray*)childenPageControllers;
