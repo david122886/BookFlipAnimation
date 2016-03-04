@@ -1,0 +1,380 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		660B50DE1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50DD1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m */; };
+		660B50E11C87EC81000E0BF1 /* ChapterNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E01C87EC81000E0BF1 /* ChapterNode.m */; };
+		660B50E41C87EC93000E0BF1 /* BookModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E31C87EC93000E0BF1 /* BookModel.m */; };
+		660B50E71C87ECA7000E0BF1 /* RequestError.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E61C87ECA7000E0BF1 /* RequestError.m */; };
+		660B50EA1C87ECC2000E0BF1 /* Page.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E91C87ECC2000E0BF1 /* Page.m */; };
+		660B50ED1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50EC1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m */; };
+		66FA199D1C86887E0096BC40 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA199C1C86887E0096BC40 /* main.m */; };
+		66FA19A01C86887E0096BC40 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA199F1C86887E0096BC40 /* AppDelegate.m */; };
+		66FA19A31C86887E0096BC40 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19A21C86887E0096BC40 /* ViewController.m */; };
+		66FA19A61C86887F0096BC40 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66FA19A41C86887F0096BC40 /* Main.storyboard */; };
+		66FA19A81C86887F0096BC40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66FA19A71C86887F0096BC40 /* Assets.xcassets */; };
+		66FA19AB1C86887F0096BC40 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66FA19A91C86887F0096BC40 /* LaunchScreen.storyboard */; };
+		66FA19B51C868BE20096BC40 /* XXSYReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */; };
+		66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */; };
+		66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19BA1C869BA20096BC40 /* XXSYFlipAnimationController.m */; };
+		66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		660B50DC1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XXSYFlipAnimationController+PageProperty.h"; sourceTree = "<group>"; };
+		660B50DD1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XXSYFlipAnimationController+PageProperty.m"; sourceTree = "<group>"; };
+		660B50DF1C87EC81000E0BF1 /* ChapterNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterNode.h; sourceTree = "<group>"; };
+		660B50E01C87EC81000E0BF1 /* ChapterNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChapterNode.m; sourceTree = "<group>"; };
+		660B50E21C87EC93000E0BF1 /* BookModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookModel.h; sourceTree = "<group>"; };
+		660B50E31C87EC93000E0BF1 /* BookModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookModel.m; sourceTree = "<group>"; };
+		660B50E51C87ECA7000E0BF1 /* RequestError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestError.h; sourceTree = "<group>"; };
+		660B50E61C87ECA7000E0BF1 /* RequestError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestError.m; sourceTree = "<group>"; };
+		660B50E81C87ECC2000E0BF1 /* Page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Page.h; sourceTree = "<group>"; };
+		660B50E91C87ECC2000E0BF1 /* Page.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Page.m; sourceTree = "<group>"; };
+		660B50EB1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XXSYFlipAnimationController+PageContent.h"; sourceTree = "<group>"; };
+		660B50EC1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XXSYFlipAnimationController+PageContent.m"; sourceTree = "<group>"; };
+		660B50EE1C87FFC9000E0BF1 /* XXSYFlipAnimationConstent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYFlipAnimationConstent.h; sourceTree = "<group>"; };
+		66FA19981C86887E0096BC40 /* BookFlipAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookFlipAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66FA199C1C86887E0096BC40 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		66FA199E1C86887E0096BC40 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		66FA199F1C86887E0096BC40 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		66FA19A11C86887E0096BC40 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		66FA19A21C86887E0096BC40 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		66FA19A51C86887F0096BC40 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		66FA19A71C86887F0096BC40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		66FA19AA1C86887F0096BC40 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		66FA19AC1C86887F0096BC40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66FA19B31C868BE20096BC40 /* XXSYReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYReaderViewController.h; sourceTree = "<group>"; };
+		66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXSYReaderViewController.m; sourceTree = "<group>"; };
+		66FA19B61C868BF80096BC40 /* XXSYPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYPageViewController.h; sourceTree = "<group>"; };
+		66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXSYPageViewController.m; sourceTree = "<group>"; };
+		66FA19B91C869BA20096BC40 /* XXSYFlipAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYFlipAnimationController.h; sourceTree = "<group>"; };
+		66FA19BA1C869BA20096BC40 /* XXSYFlipAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXSYFlipAnimationController.m; sourceTree = "<group>"; };
+		66FA19C01C869CBF0096BC40 /* Constent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constent.h; sourceTree = "<group>"; };
+		66FA19C11C86D2900096BC40 /* XXSYPageVCProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYPageVCProtocol.h; sourceTree = "<group>"; };
+		66FA19C21C86E91A0096BC40 /* ReadDataProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadDataProperty.h; sourceTree = "<group>"; };
+		66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadDataProperty.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		66FA19951C86887E0096BC40 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		66FA198F1C86887E0096BC40 = {
+			isa = PBXGroup;
+			children = (
+				66FA199A1C86887E0096BC40 /* BookFlipAnimation */,
+				66FA19991C86887E0096BC40 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		66FA19991C86887E0096BC40 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				66FA19981C86887E0096BC40 /* BookFlipAnimation.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		66FA199A1C86887E0096BC40 /* BookFlipAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				66FA19B21C868B840096BC40 /* BookFlipAnimation */,
+				66FA199E1C86887E0096BC40 /* AppDelegate.h */,
+				66FA199F1C86887E0096BC40 /* AppDelegate.m */,
+				66FA19A11C86887E0096BC40 /* ViewController.h */,
+				66FA19A21C86887E0096BC40 /* ViewController.m */,
+				66FA19C21C86E91A0096BC40 /* ReadDataProperty.h */,
+				66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */,
+				660B50DF1C87EC81000E0BF1 /* ChapterNode.h */,
+				660B50E01C87EC81000E0BF1 /* ChapterNode.m */,
+				660B50E21C87EC93000E0BF1 /* BookModel.h */,
+				660B50E31C87EC93000E0BF1 /* BookModel.m */,
+				660B50E51C87ECA7000E0BF1 /* RequestError.h */,
+				660B50E61C87ECA7000E0BF1 /* RequestError.m */,
+				660B50E81C87ECC2000E0BF1 /* Page.h */,
+				660B50E91C87ECC2000E0BF1 /* Page.m */,
+				66FA19A41C86887F0096BC40 /* Main.storyboard */,
+				66FA19A71C86887F0096BC40 /* Assets.xcassets */,
+				66FA19A91C86887F0096BC40 /* LaunchScreen.storyboard */,
+				66FA19AC1C86887F0096BC40 /* Info.plist */,
+				66FA199B1C86887E0096BC40 /* Supporting Files */,
+			);
+			path = BookFlipAnimation;
+			sourceTree = "<group>";
+		};
+		66FA199B1C86887E0096BC40 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				66FA199C1C86887E0096BC40 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		66FA19B21C868B840096BC40 /* BookFlipAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				66FA19B31C868BE20096BC40 /* XXSYReaderViewController.h */,
+				66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */,
+				66FA19C11C86D2900096BC40 /* XXSYPageVCProtocol.h */,
+				66FA19B61C868BF80096BC40 /* XXSYPageViewController.h */,
+				66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */,
+				66FA19B91C869BA20096BC40 /* XXSYFlipAnimationController.h */,
+				66FA19BA1C869BA20096BC40 /* XXSYFlipAnimationController.m */,
+				660B50DC1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.h */,
+				660B50DD1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m */,
+				660B50EB1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.h */,
+				660B50EC1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m */,
+				660B50EE1C87FFC9000E0BF1 /* XXSYFlipAnimationConstent.h */,
+				66FA19C01C869CBF0096BC40 /* Constent.h */,
+			);
+			path = BookFlipAnimation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		66FA19971C86887E0096BC40 /* BookFlipAnimation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66FA19AF1C86887F0096BC40 /* Build configuration list for PBXNativeTarget "BookFlipAnimation" */;
+			buildPhases = (
+				66FA19941C86887E0096BC40 /* Sources */,
+				66FA19951C86887E0096BC40 /* Frameworks */,
+				66FA19961C86887E0096BC40 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BookFlipAnimation;
+			productName = BookFlipAnimation;
+			productReference = 66FA19981C86887E0096BC40 /* BookFlipAnimation.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		66FA19901C86887E0096BC40 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "___xiaoxiangwenxue___";
+				TargetAttributes = {
+					66FA19971C86887E0096BC40 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 66FA19931C86887E0096BC40 /* Build configuration list for PBXProject "BookFlipAnimation" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 66FA198F1C86887E0096BC40;
+			productRefGroup = 66FA19991C86887E0096BC40 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				66FA19971C86887E0096BC40 /* BookFlipAnimation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		66FA19961C86887E0096BC40 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66FA19AB1C86887F0096BC40 /* LaunchScreen.storyboard in Resources */,
+				66FA19A81C86887F0096BC40 /* Assets.xcassets in Resources */,
+				66FA19A61C86887F0096BC40 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		66FA19941C86887E0096BC40 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66FA19A31C86887E0096BC40 /* ViewController.m in Sources */,
+				66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */,
+				66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */,
+				660B50E11C87EC81000E0BF1 /* ChapterNode.m in Sources */,
+				660B50E71C87ECA7000E0BF1 /* RequestError.m in Sources */,
+				660B50E41C87EC93000E0BF1 /* BookModel.m in Sources */,
+				660B50EA1C87ECC2000E0BF1 /* Page.m in Sources */,
+				66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */,
+				66FA19A01C86887E0096BC40 /* AppDelegate.m in Sources */,
+				660B50DE1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m in Sources */,
+				66FA199D1C86887E0096BC40 /* main.m in Sources */,
+				66FA19B51C868BE20096BC40 /* XXSYReaderViewController.m in Sources */,
+				660B50ED1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		66FA19A41C86887F0096BC40 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66FA19A51C86887F0096BC40 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		66FA19A91C86887F0096BC40 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66FA19AA1C86887F0096BC40 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		66FA19AD1C86887F0096BC40 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		66FA19AE1C86887F0096BC40 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		66FA19B01C86887F0096BC40 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BookFlipAnimation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = xiaoxiangwenxue.BookFlipAnimation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		66FA19B11C86887F0096BC40 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BookFlipAnimation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = xiaoxiangwenxue.BookFlipAnimation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		66FA19931C86887E0096BC40 /* Build configuration list for PBXProject "BookFlipAnimation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66FA19AD1C86887F0096BC40 /* Debug */,
+				66FA19AE1C86887F0096BC40 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66FA19AF1C86887F0096BC40 /* Build configuration list for PBXNativeTarget "BookFlipAnimation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66FA19B01C86887F0096BC40 /* Debug */,
+				66FA19B11C86887F0096BC40 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 66FA19901C86887E0096BC40 /* Project object */;
+}
