@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "Constent.h"
 #import "XXSYFlipAnimationController.h"
+#import "FlipBookAnimationManager.h"
+
 @interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
 @end
@@ -60,10 +62,22 @@
 
 -(void)setupFlipAnimationVCAnimationBlock{
     [self.animationController setCustomVisualAnimationBlock:^(XXSYFlipAnimationController *animationController, NSArray *allAnimationViewsStack, FlipAnimationDirection animationDirection, CGRect currentViewOriginRect, CGPoint translatePoint) {
+        VisualCustomAnimationBlock block = [FlipBookAnimationManager visualAnimatingCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
+        if (block) {
+            block(animationController,allAnimationViewsStack,animationDirection,currentViewOriginRect,translatePoint);
+        }
         NSLog(@"animating");
     } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController, NSArray *allAnimationViewsStack, FlipAnimationDirection animationDirection) {
+        CustomAnimationStatusBlock block = [FlipBookAnimationManager visualBeginCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
+        if (block) {
+            block(animationController,allAnimationViewsStack,animationDirection);
+        }
         NSLog(@"begin");
     } withAnimationFinishedBlock:^(XXSYFlipAnimationController *animationController, NSArray *allAnimationViewsStack, FlipAnimationDirection animationDirection) {
+        CustomAnimationStatusBlock block = [FlipBookAnimationManager visualEndCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
+        if (block) {
+            block(animationController,allAnimationViewsStack,animationDirection);
+        }
         NSLog(@"end");
     }];
 }

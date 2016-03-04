@@ -7,8 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "XXSYPageViewController.h"
 @class XXSYFlipAnimationController;
+
+typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint);
+
+typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection);
+
+#pragma mark - 
 
 @protocol XXSYFlipAnimationControllerDataSource <NSObject>
 /**

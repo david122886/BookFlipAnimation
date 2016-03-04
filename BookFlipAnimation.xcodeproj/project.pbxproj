@@ -13,6 +13,8 @@
 		660B50E71C87ECA7000E0BF1 /* RequestError.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E61C87ECA7000E0BF1 /* RequestError.m */; };
 		660B50EA1C87ECC2000E0BF1 /* Page.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E91C87ECC2000E0BF1 /* Page.m */; };
 		660B50ED1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50EC1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m */; };
+		66F3BBDA1C898AC100F7C56C /* FlipBookAnimationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F3BBD91C898AC100F7C56C /* FlipBookAnimationManager.m */; };
+		66F3BBDE1C898FF600F7C56C /* FlipBookAnimationBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F3BBDD1C898FF600F7C56C /* FlipBookAnimationBlock.m */; };
 		66FA199D1C86887E0096BC40 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA199C1C86887E0096BC40 /* main.m */; };
 		66FA19A01C86887E0096BC40 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA199F1C86887E0096BC40 /* AppDelegate.m */; };
 		66FA19A31C86887E0096BC40 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19A21C86887E0096BC40 /* ViewController.m */; };
@@ -39,6 +41,10 @@
 		660B50EB1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XXSYFlipAnimationController+PageContent.h"; sourceTree = "<group>"; };
 		660B50EC1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XXSYFlipAnimationController+PageContent.m"; sourceTree = "<group>"; };
 		660B50EE1C87FFC9000E0BF1 /* XXSYFlipAnimationConstent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYFlipAnimationConstent.h; sourceTree = "<group>"; };
+		66F3BBD81C898AC100F7C56C /* FlipBookAnimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlipBookAnimationManager.h; sourceTree = "<group>"; };
+		66F3BBD91C898AC100F7C56C /* FlipBookAnimationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlipBookAnimationManager.m; sourceTree = "<group>"; };
+		66F3BBDC1C898FF600F7C56C /* FlipBookAnimationBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlipBookAnimationBlock.h; sourceTree = "<group>"; };
+		66F3BBDD1C898FF600F7C56C /* FlipBookAnimationBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlipBookAnimationBlock.m; sourceTree = "<group>"; };
 		66FA19981C86887E0096BC40 /* BookFlipAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookFlipAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66FA199C1C86887E0096BC40 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		66FA199E1C86887E0096BC40 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -72,6 +78,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		66F3BBDB1C898F1900F7C56C /* FlipAnimatingType */ = {
+			isa = PBXGroup;
+			children = (
+				66F3BBDC1C898FF600F7C56C /* FlipBookAnimationBlock.h */,
+				66F3BBDD1C898FF600F7C56C /* FlipBookAnimationBlock.m */,
+			);
+			path = FlipAnimatingType;
+			sourceTree = "<group>";
+		};
 		66FA198F1C86887E0096BC40 = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +141,7 @@
 		66FA19B21C868B840096BC40 /* BookFlipAnimation */ = {
 			isa = PBXGroup;
 			children = (
+				66F3BBDB1C898F1900F7C56C /* FlipAnimatingType */,
 				66FA19B31C868BE20096BC40 /* XXSYReaderViewController.h */,
 				66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */,
 				66FA19C11C86D2900096BC40 /* XXSYPageVCProtocol.h */,
@@ -138,6 +154,8 @@
 				660B50EB1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.h */,
 				660B50EC1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m */,
 				660B50EE1C87FFC9000E0BF1 /* XXSYFlipAnimationConstent.h */,
+				66F3BBD81C898AC100F7C56C /* FlipBookAnimationManager.h */,
+				66F3BBD91C898AC100F7C56C /* FlipBookAnimationManager.m */,
 				66FA19C01C869CBF0096BC40 /* Constent.h */,
 			);
 			path = BookFlipAnimation;
@@ -217,10 +235,12 @@
 				66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */,
 				66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */,
 				660B50E11C87EC81000E0BF1 /* ChapterNode.m in Sources */,
+				66F3BBDA1C898AC100F7C56C /* FlipBookAnimationManager.m in Sources */,
 				660B50E71C87ECA7000E0BF1 /* RequestError.m in Sources */,
 				660B50E41C87EC93000E0BF1 /* BookModel.m in Sources */,
 				660B50EA1C87ECC2000E0BF1 /* Page.m in Sources */,
 				66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */,
+				66F3BBDE1C898FF600F7C56C /* FlipBookAnimationBlock.m in Sources */,
 				66FA19A01C86887E0096BC40 /* AppDelegate.m in Sources */,
 				660B50DE1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m in Sources */,
 				66FA199D1C86887E0096BC40 /* main.m in Sources */,
