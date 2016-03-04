@@ -13,12 +13,38 @@
 typedef BOOL (^XXSYFlipGestureShouldRecognizeTouchBlock)(XXSYFlipAnimationController * drawerController, UIGestureRecognizer * gesture, UITouch * touch);
 typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * drawerController, UIGestureRecognizer * gesture);
 typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect);
+
+#pragma mark -
+
+@interface PageAnimationView : UIView
+@property (strong,nonatomic,readonly) XXSYPageViewController *pageVC;
+-(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC;
+-(void)setPageViewSize:(CGSize)size;
+@end
+@implementation PageAnimationView
+-(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _pageVC = pageVC;
+        [self addSubview:pageVC.view];
+    }
+    return self;
+}
+
+-(void)setPageViewSize:(CGSize)size{
+    self.pageVC.view.frame = (CGRect){0,0,size};
+}
+@end
+
+#pragma mark -
+
+
 @interface XXSYFlipAnimationController ()<UIGestureRecognizerDelegate>
 @property (strong,nonatomic) XXSYFlipGestureShouldRecognizeTouchBlock gestureShouldRecognizeTouch;
 @property (strong,nonatomic) XXSYFlipGestureCompletionBlock gestureCompletion;
 @property (strong,nonatomic) VisualCustomAnimationBlock visualCustomAnimationBlock;
-///缓存PageVC，实现重复使用,index = 0表示最上面
-@property (strong,nonatomic) NSMutableArray *reusePageVCArray;
+///缓存PageAnimationView，实现重复使用,index = 0表示最上面
+@property (strong,nonatomic) NSMutableArray *reusePageAnimationViewArray;
 
 @end
 
@@ -52,14 +78,15 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
 }
 
 -(XXSYPageViewController*)currentPageVC{
-    return [self.reusePageVCArray firstObject];
+    PageAnimationView *animationView = [self.reusePageAnimationViewArray firstObject];
+    return animationView.pageVC;
 }
 
 -(void)setupInitPageViewController:(XXSYPageViewController*)pageVC withFlipAnimationType:(FlipAnimationType)animationType{
     if (!pageVC) {
         return;
     }
-    [self movePageVCToFront:pageVC];
+    [self movePageAnimationViewToFront:[[PageAnimationView alloc] initWithFrame:[[UIScreen mainScreen] bounds] withPageVC:pageVC]];
     [self changeFlipAnimationType:animationType];
 }
 #pragma mark - init
@@ -80,12 +107,13 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
 
 -(XXSYPageViewController*)getReusePageVC{
     XXSYPageViewController *pageVC = nil;
-    if (self.reusePageVCArray.count < self.reuseCacheCount) {
+    if (self.reusePageAnimationViewArray.count < self.reuseCacheCount) {
         pageVC = [[XXSYPageViewController alloc] init];
-        [self.reusePageVCArray addObject:pageVC];
+        [self.reusePageAnimationViewArray addObject:[[PageAnimationView alloc] initWithFrame:[[UIScreen mainScreen] bounds] withPageVC:pageVC]];
         return pageVC;
     }
-    pageVC = [self.reusePageVCArray lastObject];
+    PageAnimationView *aniamtionV = [self.reusePageAnimationViewArray lastObject];
+    pageVC = aniamtionV.pageVC;
     return pageVC;
 }
 
@@ -110,46 +138,56 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
     
 }
 
--(void)movePageVCToFront:(XXSYPageViewController*)pageVC{
+-(void)movePageAnimationViewToFront:(PageAnimationView*)animationView{
+    UIViewController *pageVC = animationView.pageVC;
     if (![self.childViewControllers containsObject:pageVC]) {
         [pageVC willMoveToParentViewController:self];
-        pageVC.view.frame = self.view.bounds;
-        [self.view addSubview:pageVC.view];
-        pageVC.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        animationView.frame = self.view.bounds;
+        [animationView setPageViewSize:self.view.bounds.size];
+        [self.view addSubview:animationView];
+        animationView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self addChildViewController:pageVC];
         [pageVC didMoveToParentViewController:self];
     }
-    [self.view bringSubviewToFront:pageVC.view];
+    [self.view bringSubviewToFront:animationView];
     
-    [self.reusePageVCArray removeObject:pageVC];
-    [self.reusePageVCArray insertObject:pageVC atIndex:0];
+    [self.reusePageAnimationViewArray removeObject:animationView];
+    [self.reusePageAnimationViewArray insertObject:animationView atIndex:0];
 }
 
 #pragma mark - pagevc animation
--(void)pageVCAnimationBeginningWithNeedPageVC:(XXSYPageViewController*)needPageVC withCurrentPageVC:(XXSYPageViewController*)pageVC{
+-(void)pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageView withCurrentPageView:(PageAnimationView*)pageView{
     _isFlipAnimating = YES;
+    XXSYPageViewController *needPageVC = needPageView.pageVC;
+    XXSYPageViewController *pageVC = pageView.pageVC;
+    
     [needPageVC animationTypeChanged:self.animationType];
     [needPageVC flipAnimationStatusChanged:YES];
     [needPageVC currentPageVCChanged:YES];
     [needPageVC willMoveToFront];
-    [self movePageVCToFront:needPageVC];
+    [self movePageAnimationViewToFront:needPageView];
     
     [pageVC willMoveToBack];
     [pageVC currentPageVCChanged:NO];
 
 }
 
--(void)pageVCAnimationDidFinishedWithNeedPageVC:(XXSYPageViewController*)needPageVC withCurrentPageVC:(XXSYPageViewController*)pageVC withAnimationDirection:(FlipAnimationDirection)direction{
+-(void)pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageView withCurrentPageView:(PageAnimationView*)pageView withAnimationDirection:(FlipAnimationDirection)direction{
     _isFlipAnimating = NO;
+    XXSYPageViewController *needPageVC = needPageView.pageVC;
+    XXSYPageViewController *pageVC = pageView.pageVC;
+    
     [needPageVC flipAnimationStatusChanged:NO];
     [needPageVC didMoveToFrontWithDirection:direction];
     
     [pageVC didMoveToBackWithDirection:direction];
 }
 
--(void)pageVCAnimationDidCancelWithNeedPageVC:(XXSYPageViewController*)needPageVC withCurrentPageVC:(XXSYPageViewController*)pageVC{
+-(void)pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)needPageView withCurrentPageView:(PageAnimationView*)pageView{
     _isFlipAnimating = NO;
-//    [needPageVC flipAnimationStatusChanged:NO];
+    XXSYPageViewController *needPageVC = needPageView.pageVC;
+    XXSYPageViewController *pageVC = pageView.pageVC;
+    
     [needPageVC currentPageVCChanged:YES];
     [needPageVC didCancelMoveToBack];
     
@@ -168,13 +206,13 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
         if (!needPageVC) {
             return;
         }
-        [self pageVCAnimationBeginningWithNeedPageVC:needPageVC withCurrentPageVC:currentPageVC];
+        [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
         [UIView animateWithDuration:0.5 animations:^{
             
         } completion:^(BOOL finished) {
-            [self pageVCAnimationDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+            [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
             //OR
-            [self pageVCAnimationDidCancelWithNeedPageVC:currentPageVC withCurrentPageVC:needPageVC];
+            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
         }];
         
         return;
@@ -234,8 +272,8 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
 
 -(void)changeFlipAnimationType:(FlipAnimationType)animationType{
     _animationType = animationType;
-    for (XXSYPageViewController *pageVC in self.reusePageVCArray) {
-        [pageVC animationTypeChanged:animationType];
+    for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
+        [pageView.pageVC animationTypeChanged:animationType];
     }
 }
 
@@ -243,11 +281,11 @@ typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animatio
     _visualCustomAnimationBlock = visualAnimationBlock;
 }
 #pragma mark - property
--(NSMutableArray *)reusePageVCArray{
-    if (!_reusePageVCArray) {
-        _reusePageVCArray = @[].mutableCopy;
+-(NSMutableArray *)reusePageAnimationViewArray{
+    if (!_reusePageAnimationViewArray) {
+        _reusePageAnimationViewArray = @[].mutableCopy;
     }
-    return _reusePageVCArray;
+    return _reusePageAnimationViewArray;
 }
 
 -(NSInteger)reuseCacheCount{
