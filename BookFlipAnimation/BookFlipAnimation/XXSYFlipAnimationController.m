@@ -105,6 +105,9 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
     UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureCallback:)];
     [tap setDelegate:self];
     [self.view addGestureRecognizer:tap];
+    
+    [tap requireGestureRecognizerToFail:pan];
+
 }
 
 #pragma mark - pageVC
@@ -225,6 +228,10 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
         //            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
         
         [tapGesture setEnabled:YES];
+        
+        if (self.gestureCompletion) {
+            self.gestureCompletion(self,tapGesture);
+        }
     }];
 }
 
@@ -251,6 +258,10 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
         //            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
         
         [tapGesture setEnabled:YES];
+        
+        if (self.gestureCompletion) {
+            self.gestureCompletion(self,tapGesture);
+        }
     }];
 }
 
@@ -287,7 +298,8 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 #pragma mark - UIGestureRecognizerDelegate
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    if (!self.touchBeforeBezierPath || !self.touchCenterBezierPath || !self.touchAfterBezierPath) {
+    
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && (!self.touchBeforeBezierPath || !self.touchCenterBezierPath || !self.touchAfterBezierPath)) {
         return NO;
     }
     
