@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, FlipAnimationDirection) {
     FlipAnimationDirection_Other
 };
 
+
+
 ///自动阅读状态
 typedef NS_ENUM(NSInteger,AutoReadStatus){
     AutoReadStatus_none,

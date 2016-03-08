@@ -13,6 +13,8 @@
 
 @interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
+
+@property (assign,nonatomic) NSInteger count;
 @end
 
 @implementation ViewController
@@ -34,6 +36,9 @@
     [self setupFlipAnimationVCGesture];
     [self setupFlipAnimationVCTouchArea];
     [self setupFlipAnimationVCAnimationBlock];
+    
+    [self setupInitPageVC];
+    
 }
 
 #pragma mark - setup XXSYFlipAnimationController
@@ -55,8 +60,8 @@
     UIBezierPath *rightBezierPath = [UIBezierPath bezierPathWithRect:(CGRect){CGRectGetWidth(rect)/3*2,0,CGRectGetWidth(rect)/3,CGRectGetHeight(rect)}];
     UIBezierPath *centerBezierPath = [UIBezierPath bezierPathWithRect:(CGRect){CGRectGetWidth(rect)/3,0,CGRectGetWidth(rect)/3,CGRectGetHeight(rect)}];
     
-    [self.animationController setTouchAfterAreaBezierPath:leftBezierPath];
-    [self.animationController setTouchBeforeAreaBezierPath:rightBezierPath];
+    [self.animationController setTouchAfterAreaBezierPath:rightBezierPath];
+    [self.animationController setTouchBeforeAreaBezierPath:leftBezierPath];
     [self.animationController setTouchCenterAreaBezierPath:centerBezierPath];
 }
 
@@ -82,6 +87,13 @@
     }];
 }
 
+
+-(void)setupInitPageVC{
+    XXSYPageViewController *vc = [[XXSYPageViewController alloc] init];
+    vc.view.backgroundColor = [UIColor greenColor];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -97,13 +109,15 @@
 
 #pragma mark - XXSYFlipAnimationControllerDataSource
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
-    
+    self.count++;
+    reusePageVC.view.backgroundColor = self.count%2 == 0?[UIColor purpleColor]:[UIColor yellowColor];
     return reusePageVC;
 }
 
 
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshAfterPageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
-    
+    self.count++;
+    reusePageVC.view.backgroundColor = self.count%2 == 0?[UIColor purpleColor]:[UIColor yellowColor];
     return reusePageVC;
     
 }

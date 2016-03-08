@@ -9,16 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "XXSYFlipAnimationController.h"
 @interface FlipBookAnimationBlock : NSObject
-+(VisualCustomAnimationBlock)coverAnimatingAnimationTypeBlock;
-+(CustomAnimationStatusBlock)coverBeginAnimationTypeBlock;
-+(CustomAnimationStatusBlock)coverEndAnimationTypeBlock;
++(VisualCustomAnimationBlock)coverAnimatingStatusBlock;
++(CustomAnimationStatusBlock)coverBeginAnimationStatusBlock;
++(CustomAnimationStatusBlock)coverEndAnimationStatusBlock;
 
-+(VisualCustomAnimationBlock)scrollAnimatingAnimationTypeBlock;
-+(CustomAnimationStatusBlock)scrollBeginAnimationTypeBlock;
-+(CustomAnimationStatusBlock)scrollEndAnimationTypeBlock;
++(VisualCustomAnimationBlock)scrollAnimatingStatusBlock;
++(CustomAnimationStatusBlock)scrollBeginAnimationStatusBlock;
++(CustomAnimationStatusBlock)scrollEndAnimationStatusBlock;
 
-+(VisualCustomAnimationBlock)autoAnimatingAnimationTypeBlock;
-+(CustomAnimationStatusBlock)autoBeginAnimationTypeBlock;
-+(CustomAnimationStatusBlock)autoEndAnimationTypeBlock;
++(VisualCustomAnimationBlock)autoAnimatingStatusBlock;
++(CustomAnimationStatusBlock)autoBeginAnimationStatusBlock;
++(CustomAnimationStatusBlock)autoEndAnimationStatusBlock;
 
 @end

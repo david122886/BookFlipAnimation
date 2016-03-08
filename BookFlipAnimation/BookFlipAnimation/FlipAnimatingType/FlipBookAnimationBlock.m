@@ -11,39 +11,95 @@
 @implementation FlipBookAnimationBlock
 #pragma mark - 覆盖
 
-+(VisualCustomAnimationBlock)coverAnimatingAnimationTypeBlock{
-    return nil;
++(VisualCustomAnimationBlock)coverAnimatingStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
+        UIView *animationView = [allAnimationViewsStack firstObject];
+        animationView.frame = CGRectOffset(currentViewOriginRect, translatePoint.x, 0);
+    };
 }
-+(CustomAnimationStatusBlock)coverBeginAnimationTypeBlock{
-    return nil;
+
++(CustomAnimationStatusBlock)coverBeginAnimationStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+        if (allAnimationViewsStack.count < 2) {
+            NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
+            return ;
+        }
+        if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
+            ///滑入
+            UIView *animationView = [allAnimationViewsStack firstObject];
+            animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
+            for (int i = 1; i < allAnimationViewsStack.count; i++) {
+                UIView *tmpView = allAnimationViewsStack[i];
+                tmpView.frame = (CGRect){0,0,animationView.frame.size};
+            }
+            return;
+        }
+        ///滑出
+        for (UIView *sub in allAnimationViewsStack) {
+            sub.frame = sub.bounds;
+        }
+    };
 }
-+(CustomAnimationStatusBlock)coverEndAnimationTypeBlock{
-    return nil;
+
++(CustomAnimationStatusBlock)coverEndAnimationStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+        if (allAnimationViewsStack.count < 2) {
+            NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
+            return ;
+        }
+        if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
+            ///滑入
+            for (UIView *sub in allAnimationViewsStack) {
+                sub.frame = sub.bounds;
+            }
+            
+            return;
+        }
+        ///滑出
+        UIView *animationView = [allAnimationViewsStack firstObject];
+        animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
+        for (int i = 1; i < allAnimationViewsStack.count; i++) {
+            UIView *tmpView = allAnimationViewsStack[i];
+            tmpView.frame = animationView.bounds;
+        }
+    };
 }
 
 #pragma mark - 水平滑动
 
 
-+(VisualCustomAnimationBlock)scrollAnimatingAnimationTypeBlock{
-    return nil;
++(VisualCustomAnimationBlock)scrollAnimatingStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
+        
+    };
 }
-+(CustomAnimationStatusBlock)scrollBeginAnimationTypeBlock{
-    return nil;
++(CustomAnimationStatusBlock)scrollBeginAnimationStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+        
+    };
 }
-+(CustomAnimationStatusBlock)scrollEndAnimationTypeBlock{
-    return nil;
++(CustomAnimationStatusBlock)scrollEndAnimationStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+        
+    };
 }
 
 #pragma mark - 自动阅读
 
 
-+(VisualCustomAnimationBlock)autoAnimatingAnimationTypeBlock{
-    return nil;
++(VisualCustomAnimationBlock)autoAnimatingStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
+        
+    };
 }
-+(CustomAnimationStatusBlock)autoBeginAnimationTypeBlock{
-    return nil;
++(CustomAnimationStatusBlock)autoBeginAnimationStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+        
+    };
 }
-+(CustomAnimationStatusBlock)autoEndAnimationTypeBlock{
-    return nil;
++(CustomAnimationStatusBlock)autoEndAnimationStatusBlock{
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+        
+    };
 }
 @end

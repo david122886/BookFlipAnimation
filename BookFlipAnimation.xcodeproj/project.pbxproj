@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6602E49B1C8D5B930018FDA5 /* PageAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6602E49A1C8D5B930018FDA5 /* PageAnimationView.m */; };
 		660B50DE1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50DD1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m */; };
 		660B50E11C87EC81000E0BF1 /* ChapterNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E01C87EC81000E0BF1 /* ChapterNode.m */; };
 		660B50E41C87EC93000E0BF1 /* BookModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 660B50E31C87EC93000E0BF1 /* BookModel.m */; };
@@ -28,6 +29,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6602E4991C8D5B930018FDA5 /* PageAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageAnimationView.h; sourceTree = "<group>"; };
+		6602E49A1C8D5B930018FDA5 /* PageAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageAnimationView.m; sourceTree = "<group>"; };
 		660B50DC1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XXSYFlipAnimationController+PageProperty.h"; sourceTree = "<group>"; };
 		660B50DD1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XXSYFlipAnimationController+PageProperty.m"; sourceTree = "<group>"; };
 		660B50DF1C87EC81000E0BF1 /* ChapterNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterNode.h; sourceTree = "<group>"; };
@@ -83,6 +86,8 @@
 			children = (
 				66F3BBDC1C898FF600F7C56C /* FlipBookAnimationBlock.h */,
 				66F3BBDD1C898FF600F7C56C /* FlipBookAnimationBlock.m */,
+				6602E4991C8D5B930018FDA5 /* PageAnimationView.h */,
+				6602E49A1C8D5B930018FDA5 /* PageAnimationView.m */,
 			);
 			path = FlipAnimatingType;
 			sourceTree = "<group>";
@@ -237,6 +242,7 @@
 				660B50E11C87EC81000E0BF1 /* ChapterNode.m in Sources */,
 				66F3BBDA1C898AC100F7C56C /* FlipBookAnimationManager.m in Sources */,
 				660B50E71C87ECA7000E0BF1 /* RequestError.m in Sources */,
+				6602E49B1C8D5B930018FDA5 /* PageAnimationView.m in Sources */,
 				660B50E41C87EC93000E0BF1 /* BookModel.m in Sources */,
 				660B50EA1C87ECC2000E0BF1 /* Page.m in Sources */,
 				66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */,
