@@ -57,7 +57,7 @@
 -(instancetype)initWithShadowPosion:(PageAnimationViewShadowPosition)shadowPosion withPageVC:(XXSYPageViewController*)pageVC{
     self = [super initWithFrame:[PageAnimationView pageAnimationViewFrameWithShadowPosion:shadowPosion]];
     if (self) {
-//        self.clipsToBounds = YES;
+        self.clipsToBounds = YES;
 
         _pageVC = pageVC;
         _pageVC.view.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];
@@ -67,6 +67,7 @@
         _shadowImageView = [[UIImageView alloc] init];
         [_shadowImageView setHidden:YES];
         _shadowImageView.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor clearColor];
         [self setShadowPosion:shadowPosion];
         [self addSubview:_shadowImageView];
     }
@@ -81,8 +82,18 @@
         return;
     }
     
-    UIImage *image = [[UIImage imageNamed:@"shadow"] resizableImageWithCapInsets:(UIEdgeInsets){0,0,0,0}];
-    _shadowImageView.image = image;
+//    UIImage *image = [[UIImage imageNamed:@"shadow"] resizableImageWithCapInsets:(UIEdgeInsets){0,0,0,0}];
+    UIImage *shadowImage = [UIImage imageNamed:@"shadow.png"];
+    
+    CGFloat top = shadowImage.size.height / 2 - 1; // 顶端盖高度
+    CGFloat bottom = shadowImage.size.height / 2 + 1 ; // 底端盖高度
+    CGFloat left = 0; // 左端盖宽度
+    CGFloat right = 0; // 右端盖宽度
+    UIEdgeInsets insets = UIEdgeInsetsMake(top, left, bottom, right);
+    shadowImage = [shadowImage resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+    
+    _shadowImageView.image = shadowImage;
+    [_shadowImageView setHidden:NO];
     if (shadowPosion == ShadowPosion_Right) {
         _shadowImageView.frame = (CGRect){CGRectGetWidth(self.frame)-kShadowWidth,0,kShadowWidth,CGRectGetHeight(self.frame)};
         _shadowImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
