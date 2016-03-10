@@ -7,7 +7,7 @@
 //
 
 #define kDefaultPageVCCacheCount 3
-#define kFlipAnimationSpeed 1000.0
+#define kFlipAnimationSpeed 1500.0
 #define kMinPanVelocity 5
 #import "XXSYFlipAnimationController.h"
 #import "XXSYPageViewController.h"
@@ -377,8 +377,12 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)panGestureAnimationFinished:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
-    
-    CGFloat time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationViewOriginRect) - CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    CGFloat time = 0;
+    if (direction == FlipAnimationDirection_FromRightToLeft) {
+        time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    }else{
+        time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    }
     CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?self.touchAnimationView.bounds:CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
     CGPoint finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
     [UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -414,7 +418,12 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 -(void)panGestureAnimationCancel:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
     
-    CGFloat time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationViewOriginRect) - CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    CGFloat time = 0;
+    if (direction == FlipAnimationDirection_FromRightToLeft) {
+        time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    }else{
+        time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    }
     CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?self.touchAnimationView.bounds:CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
     CGPoint finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
     [UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
