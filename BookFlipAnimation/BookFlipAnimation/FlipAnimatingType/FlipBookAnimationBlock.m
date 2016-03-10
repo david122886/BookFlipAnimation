@@ -14,7 +14,19 @@
 +(VisualCustomAnimationBlock)coverAnimatingStatusBlock{
     return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
         UIView *animationView = [allAnimationViewsStack firstObject];
-        animationView.frame = CGRectOffset(currentViewOriginRect, translatePoint.x, 0);
+        CGRect rect = CGRectOffset(currentViewOriginRect, translatePoint.x, 0);
+        rect = CGRectIntegral(rect);
+        if (animationDirection == FlipAnimationDirection_FromRightToLeft) {
+            if (rect.origin.x > 0) {
+                rect.origin.x = 0;
+            }
+        }
+        if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
+            if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
+                rect.origin.x = - CGRectGetWidth(animationView.frame);
+            }
+        }
+        animationView.frame = rect;
     };
 }
 
