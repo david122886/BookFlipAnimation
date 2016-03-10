@@ -19,11 +19,12 @@
 }
 
 +(CustomAnimationStatusBlock)coverBeginAnimationStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection){
         if (allAnimationViewsStack.count < 2) {
             NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
             return ;
         }
+        
         if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
             ///滑入
             UIView *animationView = [allAnimationViewsStack firstObject];
@@ -42,7 +43,7 @@
 }
 
 +(CustomAnimationStatusBlock)coverEndAnimationStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection){
         if (allAnimationViewsStack.count < 2) {
             NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
             return ;
@@ -74,12 +75,12 @@
     };
 }
 +(CustomAnimationStatusBlock)scrollBeginAnimationStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection){
         
     };
 }
 +(CustomAnimationStatusBlock)scrollEndAnimationStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection){
         
     };
 }
@@ -93,12 +94,12 @@
     };
 }
 +(CustomAnimationStatusBlock)autoBeginAnimationStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection){
         
     };
 }
 +(CustomAnimationStatusBlock)autoEndAnimationStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection){
         
     };
 }

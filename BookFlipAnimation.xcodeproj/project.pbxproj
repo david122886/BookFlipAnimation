@@ -26,6 +26,7 @@
 		66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */; };
 		66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19BA1C869BA20096BC40 /* XXSYFlipAnimationController.m */; };
 		66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */; };
+		EB7270251C901A1F00451EF6 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7270241C901A1F00451EF6 /* PageViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,8 @@
 		66FA19C11C86D2900096BC40 /* XXSYPageVCProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYPageVCProtocol.h; sourceTree = "<group>"; };
 		66FA19C21C86E91A0096BC40 /* ReadDataProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadDataProperty.h; sourceTree = "<group>"; };
 		66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadDataProperty.m; sourceTree = "<group>"; };
+		EB7270231C901A1F00451EF6 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
+		EB7270241C901A1F00451EF6 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +119,8 @@
 				66FA199F1C86887E0096BC40 /* AppDelegate.m */,
 				66FA19A11C86887E0096BC40 /* ViewController.h */,
 				66FA19A21C86887E0096BC40 /* ViewController.m */,
+				EB7270231C901A1F00451EF6 /* PageViewController.h */,
+				EB7270241C901A1F00451EF6 /* PageViewController.m */,
 				66FA19C21C86E91A0096BC40 /* ReadDataProperty.h */,
 				66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */,
 				660B50DF1C87EC81000E0BF1 /* ChapterNode.h */,
@@ -243,6 +248,7 @@
 				66F3BBDA1C898AC100F7C56C /* FlipBookAnimationManager.m in Sources */,
 				660B50E71C87ECA7000E0BF1 /* RequestError.m in Sources */,
 				6602E49B1C8D5B930018FDA5 /* PageAnimationView.m in Sources */,
+				EB7270251C901A1F00451EF6 /* PageViewController.m in Sources */,
 				660B50E41C87EC93000E0BF1 /* BookModel.m in Sources */,
 				660B50EA1C87ECC2000E0BF1 /* Page.m in Sources */,
 				66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */,

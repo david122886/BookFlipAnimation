@@ -10,6 +10,7 @@
 #import "Constent.h"
 #import "XXSYFlipAnimationController.h"
 #import "FlipBookAnimationManager.h"
+#import "PageViewController.h"
 
 @interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
@@ -22,6 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _animationController = [[XXSYFlipAnimationController alloc] init];
+    [self.animationController registerPageVCForClass:[PageViewController class]];
     self.animationController.delegate = self;
     self.animationController.dataSource = self;
     
@@ -72,16 +74,16 @@
             block(animationController,allAnimationViewsStack,animationDirection,currentViewOriginRect,translatePoint);
         }
         NSLog(@"animating");
-    } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController, NSArray *allAnimationViewsStack, FlipAnimationDirection animationDirection) {
+    } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection) {
         CustomAnimationStatusBlock block = [FlipBookAnimationManager visualBeginCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
         if (block) {
-            block(animationController,allAnimationViewsStack,animationDirection);
+            block(animationController,allAnimationViewsStack,animatingView,success,animationDirection);
         }
         NSLog(@"begin");
-    } withAnimationFinishedBlock:^(XXSYFlipAnimationController *animationController, NSArray *allAnimationViewsStack, FlipAnimationDirection animationDirection) {
+    } withAnimationFinishedBlock:^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection) {
         CustomAnimationStatusBlock block = [FlipBookAnimationManager visualEndCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
         if (block) {
-            block(animationController,allAnimationViewsStack,animationDirection);
+            block(animationController,allAnimationViewsStack,animatingView,success,animationDirection);
         }
         NSLog(@"end");
     }];
@@ -89,7 +91,8 @@
 
 
 -(void)setupInitPageVC{
-    XXSYPageViewController *vc = [[XXSYPageViewController alloc] init];
+    PageViewController *vc = [[PageViewController alloc] init];
+    vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
     [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
 }
@@ -110,14 +113,16 @@
 #pragma mark - XXSYFlipAnimationControllerDataSource
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
     self.count++;
-    reusePageVC.view.backgroundColor = self.count%2 == 0?[UIColor purpleColor]:[UIColor yellowColor];
+    [(PageViewController*)reusePageVC setIndex:[(PageViewController*)currentPageVC index]+1];
+    reusePageVC.view.backgroundColor = self.count%2==0?[UIColor redColor]:[UIColor whiteColor];
     return reusePageVC;
 }
 
 
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshAfterPageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
     self.count++;
-    reusePageVC.view.backgroundColor = self.count%2 == 0?[UIColor purpleColor]:[UIColor yellowColor];
+    reusePageVC.view.backgroundColor = self.count%2==0?[UIColor redColor]:[UIColor whiteColor];
+    [(PageViewController*)reusePageVC setIndex:[(PageViewController*)currentPageVC index]+1];
     return reusePageVC;
     
 }
