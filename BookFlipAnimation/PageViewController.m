@@ -31,12 +31,49 @@
 
 -(void)willMoveToFront{
     [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
+    NSLog(@"%ld willMoveToFront",self.index);
+}
+
+-(void)didMoveToFrontWithDirection:(FlipAnimationDirection)flipDirection{
+    NSLog(@"%ld didMoveToFrontWithDirection",self.index);
+
+}
+
+-(void)didCancelMoveToFront{
+    NSLog(@"%ld didCancelMoveToFront",self.index);
+
+    self.index = 0;
+    self.text.text = nil;
+}
+
+
+-(void)willMoveToBack{
+    NSLog(@"%ld willMoveToBack",self.index);
+
+}
+
+-(void)didMoveToBackWithDirection:(FlipAnimationDirection)flipDirection{
+    NSLog(@"%ld didMoveToBackWithDirection",self.index);
+
+    self.index = 0;
+    self.text.text = nil;
+}
+
+-(void)didCancelMoveToBack{
+    NSLog(@"%ld didCancelMoveToBack",self.index);
+
+//    [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
 }
 
 -(void)clearAllPageData{
+    NSLog(@"%ld clearAllPageData",self.index);
+
     self.index = 0;
-    self.text = nil;
+    self.text.text = nil;
 }
+
+
+
 /*
 #pragma mark - Navigation
 

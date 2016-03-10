@@ -57,7 +57,7 @@
 -(instancetype)initWithShadowPosion:(PageAnimationViewShadowPosition)shadowPosion withPageVC:(XXSYPageViewController*)pageVC{
     self = [super initWithFrame:[PageAnimationView pageAnimationViewFrameWithShadowPosion:shadowPosion]];
     if (self) {
-        self.clipsToBounds = YES;
+//        self.clipsToBounds = YES;
 
         _pageVC = pageVC;
         _pageVC.view.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];

@@ -15,7 +15,6 @@
 @interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
 
-@property (assign,nonatomic) NSInteger count;
 @end
 
 @implementation ViewController
@@ -112,17 +111,17 @@
 
 #pragma mark - XXSYFlipAnimationControllerDataSource
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
-    self.count++;
-    [(PageViewController*)reusePageVC setIndex:[(PageViewController*)currentPageVC index]+1];
-    reusePageVC.view.backgroundColor = self.count%2==0?[UIColor redColor]:[UIColor whiteColor];
+    NSInteger index = [(PageViewController*)currentPageVC index];
+    [(PageViewController*)reusePageVC setIndex:index-1];
+    reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
     return reusePageVC;
 }
 
 
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshAfterPageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
-    self.count++;
-    reusePageVC.view.backgroundColor = self.count%2==0?[UIColor redColor]:[UIColor whiteColor];
-    [(PageViewController*)reusePageVC setIndex:[(PageViewController*)currentPageVC index]+1];
+    NSInteger index = [(PageViewController*)currentPageVC index];
+    reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
+    [(PageViewController*)reusePageVC setIndex:index+1];
     return reusePageVC;
     
 }

@@ -244,13 +244,13 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 #pragma mark - Gesture Helpers
-
--(void)tapGestureAfterAnimationBegining:(UITapGestureRecognizer *)tapGesture{
-    XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
+-(void)tapGestureBeforeAnimationBegining:(UITapGestureRecognizer *)tapGesture{
+    XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
     if (!needPageVC) {
         return;
     }
+    
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
     [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
     [(PageAnimationView*)needPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
@@ -267,7 +267,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         
         [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
         
-        [self movePageAnimationViewToBack:(PageAnimationView*)needPageVC.view.superview];
+//        [self movePageAnimationViewToBack:(PageAnimationView*)needPageVC.view.superview];
         [(PageAnimationView*)needPageVC.view.superview setShadowPosion:ShadowPosion_None];
         
         self.customAnimationFinishedStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)needPageVC.view.superview,YES,FlipAnimationDirection_FromLeftToRight);
@@ -280,13 +280,14 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     }];
 }
 
--(void)tapGestureBeforeAnimationBegining:(UITapGestureRecognizer *)tapGesture{
-    XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
+-(void)tapGestureAfterAnimationBegining:(UITapGestureRecognizer *)tapGesture{
+    XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
     if (!needPageVC) {
         return;
     }
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
+    [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
     [self movePageAnimationViewToFront:(PageAnimationView*)currentPageVC.view.superview];
     [(PageAnimationView*)currentPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)currentPageVC.view.superview,YES,FlipAnimationDirection_FromRightToLeft);
@@ -320,23 +321,26 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 -(void)panGestureAfterAnimationWillBegin:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
     XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
+    if (!needPageVC) {
+        return;
+    }
+    
     self.tmpPanNeedPageVC = needPageVC;
     self.tmpPanCurrentPageVC = currentPageVC;
     
     if (self.animationType == FlipAnimationType_cover && direction == FlipAnimationDirection_FromRightToLeft) {
         self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
-        
+        [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
         [self movePageAnimationViewToFront:(PageAnimationView*)currentPageVC.view.superview];
         [(PageAnimationView*)currentPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     }else{
         self.touchAnimationView = (PageAnimationView*)needPageVC.view.superview;
-        
+        [self movePageAnimationViewToFront:(PageAnimationView*)currentPageVC.view.superview];
         [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
+        
         [(PageAnimationView*)needPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     }
-    if (!needPageVC) {
-        return;
-    }
+
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
     self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,self.touchAnimationView,YES,direction);
 }
@@ -344,6 +348,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 -(void)panGestureBeforeAnimationWillBegin:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
     XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
+    if (!needPageVC) {
+        return;
+    }
+    
     self.tmpPanNeedPageVC = needPageVC;
     self.tmpPanCurrentPageVC = currentPageVC;
     
@@ -351,16 +359,18 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
         
         [self movePageAnimationViewToFront:(PageAnimationView*)currentPageVC.view.superview];
+        [self.view insertSubview:(PageAnimationView*)needPageVC.view.superview belowSubview:(PageAnimationView*)currentPageVC.view.superview];
+
         [(PageAnimationView*)currentPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     }else{
         self.touchAnimationView = (PageAnimationView*)needPageVC.view.superview;
         
         [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
+        [self.view insertSubview:(PageAnimationView*)currentPageVC.view.superview belowSubview:(PageAnimationView*)needPageVC.view.superview];
+
         [(PageAnimationView*)needPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     }
-    if (!needPageVC) {
-        return;
-    }
+    
     
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
     self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,self.touchAnimationView,YES,direction);
@@ -383,17 +393,15 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:direction];
         
         if (self.panAnimationDirection == FlipAnimationDirection_FromLeftToRight) {
-            [self movePageAnimationViewToBack:(PageAnimationView*)needPageVC.view.superview];
+            [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
             [(PageAnimationView*)needPageVC.view.superview setShadowPosion:ShadowPosion_None];
         }else{
             [self movePageAnimationViewToBack:(PageAnimationView*)currentPageVC.view.superview];
+            [self movePageAnimationViewToFront:(PageAnimationView*)needPageVC.view.superview];
             [(PageAnimationView*)currentPageVC.view.superview setShadowPosion:ShadowPosion_None];
         }
         
         self.customAnimationFinishedStatusBlock(self,self.reusePageAnimationViewArray,self.touchAnimationView,YES,direction);
-        
-        //            //OR
-        //            [self pageVCAnimationDidCancelWithNeedPageView:(PageAnimationView*)currentPageVC.view.superview withCurrentPageView:(PageAnimationView*)needPageVC.view.superview];
 
         [panGesture.view setUserInteractionEnabled:YES];
         [panGesture setEnabled:YES];
@@ -421,8 +429,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         
         if (self.panAnimationDirection == FlipAnimationDirection_FromLeftToRight) {
             [self movePageAnimationViewToBack:(PageAnimationView*)needPageVC.view.superview];
+            [self movePageAnimationViewToFront:(PageAnimationView*)currentPageVC.view.superview];
             [(PageAnimationView*)needPageVC.view.superview setShadowPosion:ShadowPosion_None];
         }else{
+            [self movePageAnimationViewToFront:(PageAnimationView*)currentPageVC.view.superview];
             [(PageAnimationView*)currentPageVC.view.superview setShadowPosion:ShadowPosion_None];
         }
         
@@ -499,7 +509,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
             }
             
             if (self.panAnimationDirection == FlipAnimationDirection_FromLeftToRight) {
-                if (self.panFromLeftToRightIsAfter) {
+                if (!self.panFromLeftToRightIsAfter) {
                     [self panGestureAfterAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
                 }else{
                     [self panGestureBeforeAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
@@ -507,7 +517,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
             }
             
             if (self.panAnimationDirection == FlipAnimationDirection_FromRightToLeft) {
-                if (self.panFromLeftToRightIsAfter) {
+                if (!self.panFromLeftToRightIsAfter) {
                     [self panGestureBeforeAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
                 }else{
                     [self panGestureAfterAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
@@ -522,8 +532,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         }
 
         self.movePanPoint = point;
-        
-        NSLog(@"%@",NSStringFromCGPoint(point));
      }
             break;
         case UIGestureRecognizerStateEnded:

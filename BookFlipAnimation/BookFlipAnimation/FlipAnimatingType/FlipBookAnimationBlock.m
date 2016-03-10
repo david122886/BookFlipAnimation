@@ -27,11 +27,12 @@
         
         if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
             ///滑入
-            UIView *animationView = [allAnimationViewsStack firstObject];
+            UIView *animationView = animatingView;
             animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-            for (int i = 1; i < allAnimationViewsStack.count; i++) {
-                UIView *tmpView = allAnimationViewsStack[i];
-                tmpView.frame = (CGRect){0,0,animationView.frame.size};
+            for (UIView *tmpView in allAnimationViewsStack) {
+                if (tmpView != animatingView) {
+                    tmpView.frame = (CGRect){0,0,animationView.frame.size};
+                }
             }
             return;
         }
@@ -48,6 +49,7 @@
             NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
             return ;
         }
+        
         if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
             ///滑入
             for (UIView *sub in allAnimationViewsStack) {
@@ -57,11 +59,12 @@
             return;
         }
         ///滑出
-        UIView *animationView = [allAnimationViewsStack firstObject];
+        UIView *animationView = animatingView;
         animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-        for (int i = 1; i < allAnimationViewsStack.count; i++) {
-            UIView *tmpView = allAnimationViewsStack[i];
-            tmpView.frame = animationView.bounds;
+        for (UIView *tmpView in allAnimationViewsStack) {
+            if (tmpView != animatingView) {
+                tmpView.frame = animationView.bounds;
+            }
         }
     };
 }
