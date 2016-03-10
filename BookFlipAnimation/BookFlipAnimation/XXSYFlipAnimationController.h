@@ -10,10 +10,11 @@
 
 #import "XXSYPageViewController.h"
 @class XXSYFlipAnimationController;
+@class PageAnimationView;
 
 typedef void (^VisualCustomAnimationBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint);
 
-typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection);
+typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection);
 
 #pragma mark - 
 
@@ -64,7 +65,7 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 -(void)changeFlipAnimationType:(FlipAnimationType)animationType;
 
 ///自定义动画，上下拖动（uiscrollview实现）和仿真（uipageviewcontroller实现）除外
--(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock withAnimationBeginStatusBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection))animationBeginStatus withAnimationFinishedBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection))animationFinishedStatus;
+-(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock withAnimationBeginStatusBlock:(void (^)(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection))animationBeginStatus withAnimationFinishedBlock:(void (^)(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection))animationFinishedStatus;
 
 #pragma mark -
 

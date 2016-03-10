@@ -73,16 +73,16 @@
             block(animationController,allAnimationViewsStack,animationDirection,currentViewOriginRect,translatePoint);
         }
         NSLog(@"animating");
-    } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection) {
+    } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection) {
         CustomAnimationStatusBlock block = [FlipBookAnimationManager visualBeginCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
         if (block) {
-            block(animationController,allAnimationViewsStack,animatingView,success,animationDirection);
+            block(animationController,allAnimationViewsStack,reuseView,currentView,originDirection,finalDirection);
         }
         NSLog(@"begin");
-    } withAnimationFinishedBlock:^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,UIView *animatingView,BOOL success,FlipAnimationDirection animationDirection) {
+    } withAnimationFinishedBlock:^(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection) {
         CustomAnimationStatusBlock block = [FlipBookAnimationManager visualEndCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
         if (block) {
-            block(animationController,allAnimationViewsStack,animatingView,success,animationDirection);
+            block(animationController,allAnimationViewsStack,reuseView,currentView,originDirection,finalDirection);
         }
         NSLog(@"end");
     }];
@@ -93,7 +93,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll];
 }
 
 - (void)didReceiveMemoryWarning {
