@@ -61,8 +61,8 @@
     UIBezierPath *rightBezierPath = [UIBezierPath bezierPathWithRect:(CGRect){CGRectGetWidth(rect)/3*2,0,CGRectGetWidth(rect)/3,CGRectGetHeight(rect)}];
     UIBezierPath *centerBezierPath = [UIBezierPath bezierPathWithRect:(CGRect){CGRectGetWidth(rect)/3,0,CGRectGetWidth(rect)/3,CGRectGetHeight(rect)}];
     
-    [self.animationController setTouchAfterAreaBezierPath:rightBezierPath];
-    [self.animationController setTouchBeforeAreaBezierPath:leftBezierPath];
+    [self.animationController setTouchAfterAreaBezierPath:leftBezierPath];
+    [self.animationController setTouchBeforeAreaBezierPath:rightBezierPath];
     [self.animationController setTouchCenterAreaBezierPath:centerBezierPath];
 }
 
@@ -93,7 +93,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
 }
 
 - (void)didReceiveMemoryWarning {

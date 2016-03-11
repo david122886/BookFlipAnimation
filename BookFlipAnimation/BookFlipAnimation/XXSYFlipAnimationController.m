@@ -40,7 +40,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 @property (nonatomic, assign) CGPoint movePanPoint;
 //手势开始移动的 Point
 @property (nonatomic, assign) FlipAnimationDirection panAnimationDirection;
-@property (assign,nonatomic) BOOL panFromLeftToRightIsAfter;
 @property (assign,nonatomic) CGRect touchAnimationViewOriginRect;
 @property (strong,nonatomic) PageAnimationView *touchAnimationView;
 
@@ -245,7 +244,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - Gesture Helpers
 -(void)tapGestureBeforeAnimationBegining:(UITapGestureRecognizer *)tapGesture{
-    XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
+    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadBeforePageVC]:[self getNeedLoadAfterPageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
     if (!needPageVC) {
         return;
@@ -284,7 +283,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)tapGestureAfterAnimationBegining:(UITapGestureRecognizer *)tapGesture{
-    XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
+    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadAfterPageVC]:[self getNeedLoadBeforePageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
     if (!needPageVC) {
         return;
@@ -314,7 +313,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)panGestureAfterAnimationWillBegin:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
-    XXSYPageViewController *needPageVC = [self getNeedLoadAfterPageVC];
+    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadAfterPageVC]:[self getNeedLoadBeforePageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
     if (!needPageVC) {
         return;
@@ -339,7 +338,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)panGestureBeforeAnimationWillBegin:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
-    XXSYPageViewController *needPageVC = [self getNeedLoadBeforePageVC];
+    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadBeforePageVC]:[self getNeedLoadAfterPageVC];
     XXSYPageViewController *currentPageVC = [self currentPageVC];
     if (!needPageVC) {
         return;
@@ -451,11 +450,22 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - Gesture Handlers
 
+-(BOOL)touchFromLeftToRightIsAfter{
+    CGRect beforeRect = CGPathGetBoundingBox(self.touchBeforeBezierPath.CGPath);
+    CGRect afterRect = CGPathGetBoundingBox(self.touchAfterBezierPath.CGPath);
+    return CGRectGetMinX(beforeRect) < CGRectGetMinX(afterRect);
+}
+
 -(void)tapGestureCallback:(UITapGestureRecognizer *)tapGesture{
     CGPoint point = [tapGesture locationInView:tapGesture.view];
     if ([self.touchAfterBezierPath containsPoint:point]) {
         ///下翻页
-        [self tapGestureAfterAnimationBegining:tapGesture];
+        if ([self touchFromLeftToRightIsAfter]) {
+            [self tapGestureAfterAnimationBegining:tapGesture];
+        }else{
+            [self tapGestureBeforeAnimationBegining:tapGesture];
+
+        }
         return;
     }
     
@@ -469,7 +479,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     if ([self.touchBeforeBezierPath containsPoint:point]) {
         ///上翻页
-        [self tapGestureBeforeAnimationBegining:tapGesture];
+        if ([self touchFromLeftToRightIsAfter]) {
+            [self tapGestureBeforeAnimationBegining:tapGesture];
+        }else{
+            [self tapGestureAfterAnimationBegining:tapGesture];
+        }
         return;
     }
     
@@ -490,9 +504,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
             self.tmpPanCurrentPageVC = nil;
             self.tmpPanNeedPageVC = nil;
             
-          CGRect beforeRect = CGPathGetBoundingBox(self.touchBeforeBezierPath.CGPath);
-           CGRect afterRect = CGPathGetBoundingBox(self.touchAfterBezierPath.CGPath);
-           self.panFromLeftToRightIsAfter = CGRectGetMinX(beforeRect) < CGRectGetMinX(afterRect);
            self.touchAnimationViewOriginRect = CGRectZero;
         }
             break;
@@ -504,25 +515,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
             
             if (point.x > kMinPanVelocity) {
                 self.panAnimationDirection = FlipAnimationDirection_FromLeftToRight;
+                [self panGestureBeforeAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
             }else
             if (point.x < -kMinPanVelocity) {
                 self.panAnimationDirection = FlipAnimationDirection_FromRightToLeft;
-            }
-            
-            if (self.panAnimationDirection == FlipAnimationDirection_FromLeftToRight) {
-                if (!self.panFromLeftToRightIsAfter) {
-                    [self panGestureAfterAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
-                }else{
-                    [self panGestureBeforeAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
-                }
-            }
-            
-            if (self.panAnimationDirection == FlipAnimationDirection_FromRightToLeft) {
-                if (!self.panFromLeftToRightIsAfter) {
-                    [self panGestureBeforeAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
-                }else{
-                    [self panGestureAfterAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
-                }
+                [self panGestureAfterAnimationWillBegin:panGesture withFlipDirection:self.panAnimationDirection];
             }
             
             UIView *animationView = [self.reusePageAnimationViewArray firstObject];
