@@ -12,16 +12,16 @@
 #pragma mark - 覆盖
 
 +(VisualCustomAnimationBlock)coverAnimatingStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
         UIView *animationView = [allAnimationViewsStack firstObject];
         CGRect rect = CGRectOffset(currentViewOriginRect, translatePoint.x, 0);
 //        rect = CGRectIntegral(rect);
-        if (animationDirection == FlipAnimationDirection_FromRightToLeft) {
+        if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
             if (rect.origin.x > 0) {
                 rect.origin.x = 0;
             }
         }
-        if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
+        if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
             if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
                 rect.origin.x = - CGRectGetWidth(animationView.frame);
             }
@@ -167,32 +167,123 @@
 
 
 +(VisualCustomAnimationBlock)scrollAnimatingStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
         UIView *animationView = [allAnimationViewsStack firstObject];
+        UIView *followView = [allAnimationViewsStack objectAtIndex:1];
         CGRect rect = CGRectOffset(currentViewOriginRect, translatePoint.x, 0);
-        rect = CGRectIntegral(rect);
-        if (animationDirection == FlipAnimationDirection_FromRightToLeft) {
-            if (rect.origin.x > 0) {
-                rect.origin.x = 0;
+        CGRect followRect;
+//        rect = CGRectIntegral(rect);
+        if (originDirection == finalDirection) {
+            if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
+                if (rect.origin.x > 0) {
+                    rect.origin.x = 0;
+                }
+                followRect = CGRectOffset(rect, CGRectGetWidth(animationView.frame), 0);
+            }
+            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+                if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
+                    rect.origin.x = - CGRectGetWidth(animationView.frame);
+                }
+                followRect = CGRectOffset(rect, -CGRectGetWidth(animationView.frame), 0);
+            }
+        }else{
+            if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
+                if (rect.origin.x > 0) {
+                    rect.origin.x = 0;
+                }
+                followRect = CGRectOffset(rect, -CGRectGetWidth(animationView.frame), 0);
+            }
+            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+                if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
+                    rect.origin.x = - CGRectGetWidth(animationView.frame);
+                }
+                followRect = CGRectOffset(rect, CGRectGetWidth(animationView.frame), 0);
             }
         }
-        if (animationDirection == FlipAnimationDirection_FromLeftToRight) {
-            if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
-                rect.origin.x = - CGRectGetWidth(animationView.frame);
-            }
-        }
+        
         animationView.frame = rect;
+        followView.frame = followRect;
     };
 }
 
 +(CustomAnimationStatusBlock)scrollBeginAnimationStatusBlock{
     return ^(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection){
+        if (allAnimationViewsStack.count < 2) {
+            NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
+            return ;
+        }
         
+        [allAnimationViewsStack removeObject:reuseView];
+        [allAnimationViewsStack insertObject:reuseView atIndex:0];
+        [animationController.view bringSubviewToFront:(UIView*)reuseView];
+        
+        [allAnimationViewsStack removeObject:currentView];
+        [allAnimationViewsStack insertObject:currentView atIndex:0];
+        [animationController.view bringSubviewToFront:(UIView*)currentView];
+        
+        
+        [reuseView setShadowPosion:ShadowPosion_None];
+        [currentView setShadowPosion:ShadowPosion_None];
+        
+        for (UIView *sub in allAnimationViewsStack) {
+            sub.frame = sub.bounds;
+        }
+        
+        if (originDirection == FlipAnimationDirection_FromLeftToRight) {
+            reuseView.frame = CGRectOffset(currentView.bounds, -CGRectGetWidth(currentView.bounds), 0);
+        }
+        
+        if (originDirection == FlipAnimationDirection_FromRightToLeft) {
+            reuseView.frame = CGRectOffset(currentView.bounds, CGRectGetWidth(currentView.bounds), 0);
+        }
     };
 }
 +(CustomAnimationStatusBlock)scrollEndAnimationStatusBlock{
     return ^(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection){
-        
+        if (allAnimationViewsStack.count < 2) {
+            NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
+            return ;
+        }
+        if (originDirection == finalDirection) {
+            [allAnimationViewsStack removeObject:currentView];
+            [allAnimationViewsStack addObject:currentView];
+            [animationController.view sendSubviewToBack:(UIView*)currentView];
+            
+            [allAnimationViewsStack removeObject:reuseView];
+            [allAnimationViewsStack insertObject:reuseView atIndex:0];
+            [animationController.view bringSubviewToFront:(UIView*)reuseView];
+            
+//            [currentView setShadowPosion:ShadowPosion_None];
+            for (UIView *sub in allAnimationViewsStack) {
+                sub.frame = sub.bounds;
+            }
+            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+                currentView.frame = CGRectOffset(currentView.bounds, CGRectGetWidth(currentView.frame), 0);
+            }
+            if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
+                currentView.frame = CGRectOffset(currentView.bounds, -CGRectGetWidth(currentView.frame), 0);
+
+            }
+            
+        }else{
+            [allAnimationViewsStack removeObject:reuseView];
+            [allAnimationViewsStack addObject:reuseView];
+            [animationController.view sendSubviewToBack:(UIView*)reuseView];
+            
+            [allAnimationViewsStack removeObject:currentView];
+            [allAnimationViewsStack insertObject:currentView atIndex:0];
+            [animationController.view bringSubviewToFront:(UIView*)currentView];
+            
+            for (UIView *sub in allAnimationViewsStack) {
+                sub.frame = sub.bounds;
+            }
+            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+                reuseView.frame = CGRectOffset(currentView.bounds, CGRectGetWidth(currentView.frame), 0);
+            }
+            if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
+                reuseView.frame = CGRectOffset(currentView.bounds, -CGRectGetWidth(currentView.frame), 0);
+            }
+        }
     };
 }
 
@@ -200,7 +291,7 @@
 
 
 +(VisualCustomAnimationBlock)autoAnimatingStatusBlock{
-    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
+    return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
         
     };
 }

@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "479353141.460665"
+            timestampString = "479371765.804106"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "280"
-            endingLineNumber = "280"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
             landmarkName = "-tapGestureAfterAnimationBegining:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,23 +74,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "479353141.460665"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "290"
-            endingLineNumber = "290"
-            landmarkName = "-tapGestureAfterAnimationBegining:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "479353141.460665"
+            timestampString = "479371765.804106"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "297"
@@ -106,11 +90,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "479353839.882217"
+            timestampString = "479371765.804106"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "330"
-            endingLineNumber = "330"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "-tapGestureAfterAnimationBegining:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
+            timestampString = "479371765.804106"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "342"
+            endingLineNumber = "342"
             landmarkName = "-panGestureBeforeAnimationWillBegin:withFlipDirection:"
             landmarkType = "5">
          </BreakpointContent>
@@ -121,13 +121,61 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "479354170.274141"
+            filePath = "BookFlipAnimation/BookFlipAnimation/FlipAnimatingType/FlipBookAnimationBlock.m"
+            timestampString = "479371223.523872"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
-            landmarkName = "-panGestureAnimationCancel:withFlipDirection:"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
+            landmarkName = "+scrollBeginAnimationStatusBlock"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookFlipAnimation/BookFlipAnimation/FlipAnimatingType/FlipBookAnimationBlock.m"
+            timestampString = "479371230.747569"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "+scrollAnimatingStatusBlock"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
+            timestampString = "479371765.804106"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
+            landmarkName = "-tapGestureBeforeAnimationBegining:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
+            timestampString = "479371765.804106"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
+            landmarkName = "-tapGestureAfterAnimationBegining:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

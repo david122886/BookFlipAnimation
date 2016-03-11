@@ -67,10 +67,10 @@
 }
 
 -(void)setupFlipAnimationVCAnimationBlock{
-    [self.animationController setCustomVisualAnimationBlock:^(XXSYFlipAnimationController *animationController, NSArray *allAnimationViewsStack, FlipAnimationDirection animationDirection, CGRect currentViewOriginRect, CGPoint translatePoint) {
+    [self.animationController setCustomVisualAnimationBlock:^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection,CGRect currentViewOriginRect,CGPoint translatePoint) {
         VisualCustomAnimationBlock block = [FlipBookAnimationManager visualAnimatingCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
         if (block) {
-            block(animationController,allAnimationViewsStack,animationDirection,currentViewOriginRect,translatePoint);
+            block(animationController,allAnimationViewsStack,originDirection,finalDirection,currentViewOriginRect,translatePoint);
         }
         NSLog(@"animating");
     } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection) {
@@ -93,7 +93,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll];
 }
 
 - (void)didReceiveMemoryWarning {

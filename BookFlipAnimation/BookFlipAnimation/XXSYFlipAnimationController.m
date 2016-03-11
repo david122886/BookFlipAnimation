@@ -257,9 +257,16 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     [tapGesture setEnabled:NO];
     CGFloat time = (CGFloat)CGRectGetWidth([[UIScreen mainScreen] bounds])/kFlipAnimationSpeed;
+    CGRect originRect;
+    if (self.animationType == FlipAnimationType_cover) {
+        originRect = needPageVC.view.superview.frame;
+    }
+    if (self.animationType == FlipAnimationType_scroll) {
+        originRect = currentPageVC.view.superview.frame;
+    }
     [UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
-        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromLeftToRight,needPageVC.view.superview.frame,(CGPoint){CGRectGetWidth(self.view.bounds),0});
+        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromLeftToRight,FlipAnimationDirection_FromLeftToRight,originRect,(CGPoint){CGRectGetWidth(self.view.bounds),0});
         
     } completion:^(BOOL finished) {
         
@@ -290,7 +297,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     CGFloat time = (CGFloat)CGRectGetWidth([[UIScreen mainScreen] bounds])/kFlipAnimationSpeed;
     [UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
-        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromRightToLeft,currentPageVC.view.superview.frame,(CGPoint){-CGRectGetWidth(self.view.bounds),0});
+        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromRightToLeft,FlipAnimationDirection_FromRightToLeft,currentPageVC.view.superview.frame,(CGPoint){-CGRectGetWidth(self.view.bounds),0});
         
     } completion:^(BOOL finished) {
         
@@ -315,12 +322,17 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     self.tmpPanNeedPageVC = needPageVC;
     self.tmpPanCurrentPageVC = currentPageVC;
-    
-    if (self.animationType == FlipAnimationType_cover && direction == FlipAnimationDirection_FromRightToLeft) {
-        self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
-    }else{
-        self.touchAnimationView = (PageAnimationView*)needPageVC.view.superview;
+    if (self.animationType == FlipAnimationType_cover) {
+        if (direction == FlipAnimationDirection_FromRightToLeft) {
+            self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
+        }else{
+            self.touchAnimationView = (PageAnimationView*)needPageVC.view.superview;
+        }
     }
+    if (self.animationType == FlipAnimationType_scroll) {
+        self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
+    }
+
 
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
     self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)needPageVC.view.superview,(PageAnimationView*)currentPageVC.view.superview,direction,direction);
@@ -335,13 +347,16 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     self.tmpPanNeedPageVC = needPageVC;
     self.tmpPanCurrentPageVC = currentPageVC;
-    
-    if (self.animationType == FlipAnimationType_cover && direction == FlipAnimationDirection_FromRightToLeft) {
-        self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
-    }else{
-        self.touchAnimationView = (PageAnimationView*)needPageVC.view.superview;
+    if (self.animationType == FlipAnimationType_cover) {
+        if (self.animationType == FlipAnimationType_cover && direction == FlipAnimationDirection_FromRightToLeft) {
+            self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
+        }else{
+            self.touchAnimationView = (PageAnimationView*)needPageVC.view.superview;
+        }
     }
-    
+    if (self.animationType == FlipAnimationType_scroll) {
+        self.touchAnimationView = (PageAnimationView*)currentPageVC.view.superview;
+    }
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
     
     self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)needPageVC.view.superview,(PageAnimationView*)currentPageVC.view.superview,direction,direction);
@@ -349,16 +364,31 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 -(void)panGestureAnimationFinished:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
     CGFloat time = 0;
-    if (direction == FlipAnimationDirection_FromRightToLeft) {
-        time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
-    }else{
-        time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    CGPoint finalTranslatePoint;
+    if (self.animationType == FlipAnimationType_cover) {
+        if (direction == FlipAnimationDirection_FromRightToLeft) {
+            time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        }else{
+            time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        }
+        CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?self.touchAnimationView.bounds:CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
+        finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
     }
-    CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?self.touchAnimationView.bounds:CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
-    CGPoint finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
+    
+    if (self.animationType == FlipAnimationType_scroll) {
+        if (direction == FlipAnimationDirection_FromRightToLeft) {
+            time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        }else{
+            time = (CGFloat)ABS(CGRectGetWidth(self.touchAnimationView.frame)-CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        }
+        CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?CGRectOffset(self.touchAnimationView.bounds,CGRectGetWidth(self.touchAnimationView.frame), 0):CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
+        finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
+    }
+
+    
     [UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
-        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,direction,self.touchAnimationView.frame,finalTranslatePoint);
+        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,self.panAnimationDirection,direction,self.touchAnimationView.frame,finalTranslatePoint);
         
     } completion:^(BOOL finished) {
         XXSYPageViewController *needPageVC = self.tmpPanNeedPageVC;
@@ -381,16 +411,25 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 -(void)panGestureAnimationCancel:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
     
     CGFloat time = 0;
-    if (direction == FlipAnimationDirection_FromRightToLeft) {
-        time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
-    }else{
-        time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+    CGPoint finalTranslatePoint;
+    if (self.animationType == FlipAnimationType_cover) {
+        if (direction == FlipAnimationDirection_FromRightToLeft) {
+            time = (CGFloat)ABS(CGRectGetMaxX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        }else{
+            time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        }
+        CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?self.touchAnimationView.bounds:CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
+        finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
     }
-    CGRect finalRect = direction == FlipAnimationDirection_FromLeftToRight?self.touchAnimationView.bounds:CGRectOffset(self.touchAnimationView.bounds, -CGRectGetWidth(self.touchAnimationView.frame), 0);
-    CGPoint finalTranslatePoint = (CGPoint){CGRectGetMinX(finalRect) - CGRectGetMinX(self.touchAnimationView.frame),0};
+    
+    if (self.animationType == FlipAnimationType_scroll) {
+        time = (CGFloat)ABS(CGRectGetMinX(self.touchAnimationView.frame))/kFlipAnimationSpeed;
+        finalTranslatePoint = (CGPoint){CGRectGetMinX(self.touchAnimationView.bounds) - CGRectGetMinX(self.touchAnimationView.frame),0};
+    }
+
     [UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
-        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,FlipAnimationDirection_FromLeftToRight,self.touchAnimationView.frame,finalTranslatePoint);
+        self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,self.panAnimationDirection,direction,self.touchAnimationView.frame,finalTranslatePoint);
         
     } completion:^(BOOL finished) {
         XXSYPageViewController *needPageVC = self.tmpPanNeedPageVC;
@@ -490,7 +529,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
             self.touchAnimationViewOriginRect = animationView.frame;
             
         }else{
-            self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,self.panAnimationDirection,self.touchAnimationViewOriginRect,[panGesture translationInView:nil]);
+            self.visualCustomAnimationBlock(self,self.reusePageAnimationViewArray,self.panAnimationDirection,self.panAnimationDirection,self.touchAnimationViewOriginRect,[panGesture translationInView:nil]);
         }
 
         self.movePanPoint = point;
@@ -564,7 +603,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     }
 }
 
--(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock
+-(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock
        withAnimationBeginStatusBlock:(void (^)(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection))animationBeginStatus
           withAnimationFinishedBlock:(void (^)(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection))animationFinishedStatus{
     _visualCustomAnimationBlock = visualAnimationBlock;
