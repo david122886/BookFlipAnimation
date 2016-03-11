@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/FlipAnimatingType/FlipBookAnimationBlock.m"
-            timestampString = "479352013.87523"
+            timestampString = "479357191.339605"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
             landmarkName = "+coverEndAnimationStatusBlock"
             landmarkType = "5">
          </BreakpointContent>

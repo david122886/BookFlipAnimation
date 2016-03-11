@@ -36,55 +36,39 @@
             NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
             return ;
         }
-        if (animationController.animationType == FlipAnimationType_scroll) {
+        if (originDirection == FlipAnimationDirection_FromLeftToRight) {
+            [allAnimationViewsStack removeObject:reuseView];
+            [allAnimationViewsStack insertObject:reuseView atIndex:0];
+            [animationController.view bringSubviewToFront:(UIView*)reuseView];
             
-            if (originDirection == FlipAnimationDirection_FromLeftToRight) {
-                
-            }
+            [reuseView setShadowPosion:ShadowPosion_Right];
             
-            if (originDirection == FlipAnimationDirection_FromRightToLeft) {
-                
-            }
-        }
-        
-        if (animationController.animationType == FlipAnimationType_cover) {
-            
-            if (originDirection == FlipAnimationDirection_FromLeftToRight) {
-                [allAnimationViewsStack removeObject:reuseView];
-                [allAnimationViewsStack insertObject:reuseView atIndex:0];
-                [animationController.view bringSubviewToFront:(UIView*)reuseView];
-                
-                [reuseView setShadowPosion:ShadowPosion_Right];
-                
-                ///滑入
-                UIView *animationView = reuseView;
-                animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-                for (UIView *tmpView in allAnimationViewsStack) {
-                    if (tmpView != reuseView) {
-                        tmpView.frame = (CGRect){0,0,animationView.frame.size};
-                    }
-                }
-            }
-            
-            if (originDirection == FlipAnimationDirection_FromRightToLeft) {
-                [allAnimationViewsStack removeObject:reuseView];
-                [allAnimationViewsStack insertObject:reuseView atIndex:0];
-                [animationController.view bringSubviewToFront:(UIView*)reuseView];
-                
-                [allAnimationViewsStack removeObject:currentView];
-                [allAnimationViewsStack insertObject:currentView atIndex:0];
-                [animationController.view bringSubviewToFront:(UIView*)currentView];
-                
-                [currentView setShadowPosion:ShadowPosion_Right];
-                
-                ///滑出
-                for (UIView *sub in allAnimationViewsStack) {
-                    sub.frame = sub.bounds;
+            ///滑入
+            UIView *animationView = reuseView;
+            animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
+            for (UIView *tmpView in allAnimationViewsStack) {
+                if (tmpView != reuseView) {
+                    tmpView.frame = (CGRect){0,0,animationView.frame.size};
                 }
             }
         }
         
-        
+        if (originDirection == FlipAnimationDirection_FromRightToLeft) {
+            [allAnimationViewsStack removeObject:reuseView];
+            [allAnimationViewsStack insertObject:reuseView atIndex:0];
+            [animationController.view bringSubviewToFront:(UIView*)reuseView];
+            
+            [allAnimationViewsStack removeObject:currentView];
+            [allAnimationViewsStack insertObject:currentView atIndex:0];
+            [animationController.view bringSubviewToFront:(UIView*)currentView];
+            
+            [currentView setShadowPosion:ShadowPosion_Right];
+            
+            ///滑出
+            for (UIView *sub in allAnimationViewsStack) {
+                sub.frame = sub.bounds;
+            }
+        }
     };
 }
 
@@ -94,94 +78,88 @@
             NSAssert(allAnimationViewsStack.count > 1, @" begin 动画效果childen View数量不足");
             return ;
         }
-        
-        if (animationController.animationType == FlipAnimationType_cover) {
-            if (originDirection == finalDirection) {
-                if (originDirection == FlipAnimationDirection_FromLeftToRight) {
-                    [allAnimationViewsStack removeObject:currentView];
-                    [allAnimationViewsStack insertObject:currentView atIndex:0];
-                    [animationController.view bringSubviewToFront:(UIView*)currentView];
-                    
-                    [allAnimationViewsStack removeObject:reuseView];
-                    [allAnimationViewsStack insertObject:reuseView atIndex:0];
-                    [animationController.view bringSubviewToFront:(UIView*)reuseView];
-                    
-                    [reuseView setShadowPosion:ShadowPosion_None];
-                    
+        if (originDirection == finalDirection) {
+            if (originDirection == FlipAnimationDirection_FromLeftToRight) {
+                [allAnimationViewsStack removeObject:currentView];
+                [allAnimationViewsStack insertObject:currentView atIndex:0];
+                [animationController.view bringSubviewToFront:(UIView*)currentView];
+                
+                [allAnimationViewsStack removeObject:reuseView];
+                [allAnimationViewsStack insertObject:reuseView atIndex:0];
+                [animationController.view bringSubviewToFront:(UIView*)reuseView];
+                
+                [reuseView setShadowPosion:ShadowPosion_None];
+                
+            }
+            
+            if (originDirection == FlipAnimationDirection_FromRightToLeft) {
+                [allAnimationViewsStack removeObject:currentView];
+                [allAnimationViewsStack addObject:currentView];
+                [animationController.view sendSubviewToBack:(UIView*)currentView];
+                
+                [allAnimationViewsStack removeObject:reuseView];
+                [allAnimationViewsStack insertObject:reuseView atIndex:0];
+                [animationController.view bringSubviewToFront:(UIView*)reuseView];
+                
+                [currentView setShadowPosion:ShadowPosion_None];
+                
+            }
+            
+            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+                ///滑入
+                for (UIView *sub in allAnimationViewsStack) {
+                    sub.frame = sub.bounds;
                 }
                 
-                if (originDirection == FlipAnimationDirection_FromRightToLeft) {
-                    [allAnimationViewsStack removeObject:currentView];
-                    [allAnimationViewsStack addObject:currentView];
-                    [animationController.view sendSubviewToBack:(UIView*)currentView];
-                    
-                    [allAnimationViewsStack removeObject:reuseView];
-                    [allAnimationViewsStack insertObject:reuseView atIndex:0];
-                    [animationController.view bringSubviewToFront:(UIView*)reuseView];
-                    
-                    [currentView setShadowPosion:ShadowPosion_None];
-                    
+                return;
+            }
+            ///滑出
+            UIView *animationView = currentView;
+            animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
+            for (UIView *tmpView in allAnimationViewsStack) {
+                if (tmpView != currentView) {
+                    tmpView.frame = animationView.bounds;
                 }
+            }
+            
+        }else{
+            if (originDirection == FlipAnimationDirection_FromLeftToRight) {
+                [allAnimationViewsStack removeObject:reuseView];
+                [allAnimationViewsStack addObject:reuseView];
+                [animationController.view sendSubviewToBack:(UIView*)reuseView];
                 
-                if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
-                    ///滑入
-                    for (UIView *sub in allAnimationViewsStack) {
-                        sub.frame = sub.bounds;
-                    }
-                    
-                    return;
-                }
+                [allAnimationViewsStack removeObject:currentView];
+                [allAnimationViewsStack insertObject:currentView atIndex:0];
+                [animationController.view bringSubviewToFront:(UIView*)currentView];
+                
+                [reuseView setShadowPosion:ShadowPosion_None];
+                
                 ///滑出
-                UIView *animationView = currentView;
+                UIView *animationView = reuseView;
                 animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
                 for (UIView *tmpView in allAnimationViewsStack) {
                     if (tmpView != currentView) {
                         tmpView.frame = animationView.bounds;
                     }
                 }
-                
-            }else{
-                if (originDirection == FlipAnimationDirection_FromLeftToRight) {
-                    [allAnimationViewsStack removeObject:reuseView];
-                    [allAnimationViewsStack addObject:reuseView];
-                    [animationController.view sendSubviewToBack:(UIView*)reuseView];
-                    
-                    [allAnimationViewsStack removeObject:currentView];
-                    [allAnimationViewsStack insertObject:currentView atIndex:0];
-                    [animationController.view bringSubviewToFront:(UIView*)currentView];
-                    
-                    [reuseView setShadowPosion:ShadowPosion_None];
-                    
-                    ///滑出
-                    UIView *animationView = reuseView;
-                    animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-                    for (UIView *tmpView in allAnimationViewsStack) {
-                        if (tmpView != currentView) {
-                            tmpView.frame = animationView.bounds;
-                        }
-                    }
-                }
-                
-                if (originDirection == FlipAnimationDirection_FromRightToLeft) {
-                    [allAnimationViewsStack removeObject:currentView];
-                    [allAnimationViewsStack insertObject:currentView atIndex:0];
-                    [animationController.view bringSubviewToFront:(UIView*)currentView];
-                    [currentView setShadowPosion:ShadowPosion_None];
-                    
-                    ///滑入
-                    for (UIView *sub in allAnimationViewsStack) {
-                        sub.frame = sub.bounds;
-                    }
-                }
-                
-                
-                
-                
             }
             
+            if (originDirection == FlipAnimationDirection_FromRightToLeft) {
+                [allAnimationViewsStack removeObject:currentView];
+                [allAnimationViewsStack insertObject:currentView atIndex:0];
+                [animationController.view bringSubviewToFront:(UIView*)currentView];
+                [currentView setShadowPosion:ShadowPosion_None];
+                
+                ///滑入
+                for (UIView *sub in allAnimationViewsStack) {
+                    sub.frame = sub.bounds;
+                }
+            }
+            
+            
+            
+            
         }
-        
-        
     };
 }
 
