@@ -61,8 +61,8 @@
     UIBezierPath *rightBezierPath = [UIBezierPath bezierPathWithRect:(CGRect){CGRectGetWidth(rect)/3*2,0,CGRectGetWidth(rect)/3,CGRectGetHeight(rect)}];
     UIBezierPath *centerBezierPath = [UIBezierPath bezierPathWithRect:(CGRect){CGRectGetWidth(rect)/3,0,CGRectGetWidth(rect)/3,CGRectGetHeight(rect)}];
     
-    [self.animationController setTouchAfterAreaBezierPath:leftBezierPath];
-    [self.animationController setTouchBeforeAreaBezierPath:rightBezierPath];
+    [self.animationController setTouchAfterAreaBezierPath:rightBezierPath];
+    [self.animationController setTouchBeforeAreaBezierPath:leftBezierPath];
     [self.animationController setTouchCenterAreaBezierPath:centerBezierPath];
 }
 

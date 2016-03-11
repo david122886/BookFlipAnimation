@@ -174,26 +174,26 @@
         CGRect followRect;
 //        rect = CGRectIntegral(rect);
         if (originDirection == finalDirection) {
-            if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
+            if (originDirection == FlipAnimationDirection_FromRightToLeft) {
                 if (rect.origin.x > 0) {
                     rect.origin.x = 0;
                 }
                 followRect = CGRectOffset(rect, CGRectGetWidth(animationView.frame), 0);
             }
-            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
-                if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
-                    rect.origin.x = - CGRectGetWidth(animationView.frame);
+            if (originDirection == FlipAnimationDirection_FromLeftToRight) {
+                if (rect.origin.x < 0) {
+                    rect.origin.x = 0;
                 }
                 followRect = CGRectOffset(rect, -CGRectGetWidth(animationView.frame), 0);
             }
         }else{
-            if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
+            if (originDirection == FlipAnimationDirection_FromRightToLeft) {
                 if (rect.origin.x > 0) {
                     rect.origin.x = 0;
                 }
                 followRect = CGRectOffset(rect, -CGRectGetWidth(animationView.frame), 0);
             }
-            if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+            if (originDirection == FlipAnimationDirection_FromLeftToRight) {
                 if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
                     rect.origin.x = - CGRectGetWidth(animationView.frame);
                 }
