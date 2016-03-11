@@ -42,8 +42,8 @@
 -(void)didCancelMoveToFront{
     NSLog(@"%ld didCancelMoveToFront",self.index);
 
-    self.index = 0;
-    self.text.text = nil;
+//    self.index = 0;
+//    self.text.text = nil;
 }
 
 
@@ -55,8 +55,8 @@
 -(void)didMoveToBackWithDirection:(FlipAnimationDirection)flipDirection{
     NSLog(@"%ld didMoveToBackWithDirection",self.index);
 
-    self.index = 0;
-    self.text.text = nil;
+//    self.index = 0;
+//    self.text.text = nil;
 }
 
 -(void)didCancelMoveToBack{
@@ -68,8 +68,8 @@
 -(void)clearAllPageData{
     NSLog(@"%ld clearAllPageData",self.index);
 
-    self.index = 0;
-    self.text.text = nil;
+//    self.index = 0;
+//    self.text.text = nil;
 }
 
 

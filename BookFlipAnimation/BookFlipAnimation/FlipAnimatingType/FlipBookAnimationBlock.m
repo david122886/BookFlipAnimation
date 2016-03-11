@@ -95,7 +95,7 @@
             return ;
         }
         
-        if (animationController.animationType == FlipAnimationType_scroll) {
+        if (animationController.animationType == FlipAnimationType_cover) {
             if (originDirection == finalDirection) {
                 if (originDirection == FlipAnimationDirection_FromLeftToRight) {
                     [allAnimationViewsStack removeObject:currentView];
@@ -122,6 +122,24 @@
                     [currentView setShadowPosion:ShadowPosion_None];
                     
                 }
+                
+                if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
+                    ///滑入
+                    for (UIView *sub in allAnimationViewsStack) {
+                        sub.frame = sub.bounds;
+                    }
+                    
+                    return;
+                }
+                ///滑出
+                UIView *animationView = currentView;
+                animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
+                for (UIView *tmpView in allAnimationViewsStack) {
+                    if (tmpView != currentView) {
+                        tmpView.frame = animationView.bounds;
+                    }
+                }
+                
             }else{
                 if (originDirection == FlipAnimationDirection_FromLeftToRight) {
                     [allAnimationViewsStack removeObject:reuseView];
@@ -134,6 +152,14 @@
                     
                     [reuseView setShadowPosion:ShadowPosion_None];
                     
+                    ///滑出
+                    UIView *animationView = reuseView;
+                    animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
+                    for (UIView *tmpView in allAnimationViewsStack) {
+                        if (tmpView != currentView) {
+                            tmpView.frame = animationView.bounds;
+                        }
+                    }
                 }
                 
                 if (originDirection == FlipAnimationDirection_FromRightToLeft) {
@@ -142,28 +168,20 @@
                     [animationController.view bringSubviewToFront:(UIView*)currentView];
                     [currentView setShadowPosion:ShadowPosion_None];
                     
+                    ///滑入
+                    for (UIView *sub in allAnimationViewsStack) {
+                        sub.frame = sub.bounds;
+                    }
                 }
+                
+                
+                
+                
             }
-            
             
         }
         
-        if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
-            ///滑入
-            for (UIView *sub in allAnimationViewsStack) {
-                sub.frame = sub.bounds;
-            }
-            
-            return;
-        }
-        ///滑出
-        UIView *animationView = currentView;
-        animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-        for (UIView *tmpView in allAnimationViewsStack) {
-            if (tmpView != currentView) {
-                tmpView.frame = animationView.bounds;
-            }
-        }
+        
     };
 }
 

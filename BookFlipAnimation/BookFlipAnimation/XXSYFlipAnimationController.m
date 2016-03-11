@@ -6,7 +6,7 @@
 //  Copyright © 2016年 ___xiaoxiangwenxue___. All rights reserved.
 //
 
-#define kDefaultPageVCCacheCount 3
+#define kDefaultPageVCCacheCount 2
 #define kFlipAnimationSpeed 1500.0
 #define kMinPanVelocity 5
 #import "XXSYFlipAnimationController.h"
@@ -94,7 +94,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     _animationType = animationType;
     _isFlipAnimating = NO;
     PageAnimationView *needView = [[PageAnimationView alloc] initWithShadowPosion:[self pageShadowPosionWithFlipType:self.animationType] withPageVC:pageVC];
-    [self movePageAnimationViewToFront:needView];
+    
+    [self movePageAnimationViewToParent:needView];
+    [self.reusePageAnimationViewArray addObject:needView];
     
     for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
         [pageView.pageVC animationTypeChanged:self.animationType];
@@ -139,6 +141,8 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         return pageVC;
     }
     PageAnimationView *aniamtionV = [self.reusePageAnimationViewArray lastObject];
+    [self movePageAnimationViewToParent:aniamtionV];
+
     pageVC = aniamtionV.pageVC;
     return pageVC;
 }
@@ -164,7 +168,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
 }
 #pragma mark -  缓存操作
--(void)movePageAnimationViewToFront:(PageAnimationView*)animationView{
+-(void)movePageAnimationViewToParent:(PageAnimationView*)animationView{
     UIViewController *pageVC = animationView.pageVC;
     if (![self.childViewControllers containsObject:pageVC]) {
         [pageVC willMoveToParentViewController:self];
@@ -173,18 +177,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         [self addChildViewController:pageVC];
         [pageVC didMoveToParentViewController:self];
     }
-    
-    [self.reusePageAnimationViewArray removeObject:animationView];
-    [self.reusePageAnimationViewArray insertObject:animationView atIndex:0];
-    [self.view bringSubviewToFront:animationView];
-}
-
-
-
--(void)movePageAnimationViewToBack:(PageAnimationView*)animationView{
-    [self.reusePageAnimationViewArray removeObject:animationView];
-    [self.reusePageAnimationViewArray addObject:animationView];
-    [self.view sendSubviewToBack:animationView];
 }
 
 #pragma mark - pagevc animation
@@ -291,7 +283,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         return;
     }
     [self pageVCAnimationBeginningWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview];
-    [(PageAnimationView*)currentPageVC.view.superview setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     
     self.customAnimationBeginStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)needPageVC.view.superview,(PageAnimationView*)currentPageVC.view.superview,FlipAnimationDirection_FromRightToLeft,FlipAnimationDirection_FromRightToLeft);
     
@@ -305,7 +296,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         
         [self pageVCAnimationDidFinishedWithNeedPageView:(PageAnimationView*)needPageVC.view.superview withCurrentPageView:(PageAnimationView*)currentPageVC.view.superview withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
         
-        self.customAnimationFinishedStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)needPageVC.view.superview,(PageAnimationView*)currentPageVC.view.superview,FlipAnimationDirection_FromLeftToRight,FlipAnimationDirection_FromLeftToRight);
+        self.customAnimationFinishedStatusBlock(self,self.reusePageAnimationViewArray,(PageAnimationView*)needPageVC.view.superview,(PageAnimationView*)currentPageVC.view.superview,FlipAnimationDirection_FromRightToLeft,FlipAnimationDirection_FromRightToLeft);
         
         [tapGesture setEnabled:YES];
         
