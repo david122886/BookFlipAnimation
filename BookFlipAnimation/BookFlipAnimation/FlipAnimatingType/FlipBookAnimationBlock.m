@@ -15,7 +15,7 @@
     return ^(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection animationDirection,CGRect currentViewOriginRect,CGPoint translatePoint){
         UIView *animationView = [allAnimationViewsStack firstObject];
         CGRect rect = CGRectOffset(currentViewOriginRect, translatePoint.x, 0);
-        rect = CGRectIntegral(rect);
+//        rect = CGRectIntegral(rect);
         if (animationDirection == FlipAnimationDirection_FromRightToLeft) {
             if (rect.origin.x > 0) {
                 rect.origin.x = 0;
