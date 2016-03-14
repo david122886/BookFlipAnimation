@@ -102,4 +102,12 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 #pragma mark - cache
 ///缓存pagevc数量
 @property (assign,nonatomic) NSInteger reuseCacheCount;
+
+
+#pragma mark - 自动翻页设置
+-(void)startAutoReadWithSpeed:(CGFloat)speed;
+-(void)stopAutoRead;
+-(void)pauseAutoRead;
+-(void)resumeAutoRead;
+-(void)setupSpeed:(CGFloat)speed;
 @end

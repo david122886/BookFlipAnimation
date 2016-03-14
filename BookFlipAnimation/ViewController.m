@@ -31,6 +31,7 @@
     self.animationController.view.frame = self.view.bounds;
     self.animationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.animationController.view];
+    [self.view sendSubviewToBack:self.animationController.view];
     [self addChildViewController:self.animationController];
     [self.animationController didMoveToParentViewController:self];
     
@@ -124,5 +125,28 @@
     [(PageViewController*)reusePageVC setIndex:index+1];
     return reusePageVC;
     
+}
+
+
+#pragma mark - auto read
+- (IBAction)start:(id)sender {
+    [self.animationController startAutoReadWithSpeed:30];
+}
+- (IBAction)stop:(id)sender {
+    [self.animationController stopAutoRead];
+}
+- (IBAction)pause:(id)sender {
+    [self.animationController pauseAutoRead];
+}
+- (IBAction)resume:(id)sender {
+    [self.animationController resumeAutoRead];
+}
+
+- (IBAction)speed:(id)sender {
+    [self.animationController setupSpeed:1];
+}
+
+- (IBAction)speedAdd:(id)sender {
+    [self.animationController setupSpeed:30];
 }
 @end
