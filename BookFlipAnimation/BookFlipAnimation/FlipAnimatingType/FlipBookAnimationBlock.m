@@ -196,13 +196,13 @@
                 if (rect.origin.x > 0) {
                     rect.origin.x = 0;
                 }
-                followRect = CGRectOffset(rect, -CGRectGetWidth(animationView.frame), 0);
+                followRect = CGRectOffset(rect, CGRectGetWidth(animationView.frame), 0);
             }
             if (originDirection == FlipAnimationDirection_FromLeftToRight) {
                 if (rect.origin.x < - CGRectGetWidth(animationView.frame)) {
                     rect.origin.x = - CGRectGetWidth(animationView.frame);
                 }
-                followRect = CGRectOffset(rect, CGRectGetWidth(animationView.frame), 0);
+                followRect = CGRectOffset(rect, -CGRectGetWidth(animationView.frame), 0);
             }
         }
         
