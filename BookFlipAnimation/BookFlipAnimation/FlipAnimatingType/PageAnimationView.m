@@ -11,6 +11,7 @@
 
 @interface PageAnimationView()
 @property (strong,nonatomic,readonly) UIImageView *shadowImageView;
+@property (strong,nonatomic) UIView *containerView;
 @end
 
 @implementation PageAnimationView
@@ -58,11 +59,17 @@
 -(instancetype)initWithShadowPosion:(PageAnimationViewShadowPosition)shadowPosion withPageVC:(XXSYPageViewController*)pageVC{
     self = [super initWithFrame:[PageAnimationView pageAnimationViewFrameWithShadowPosion:shadowPosion]];
     if (self) {
-        self.clipsToBounds = YES;
-
+//        self.clipsToBounds = YES;
+        
+        _containerView = [[UIView alloc] initWithFrame:[PageAnimationView pageViewFrameWithShadowPosion:shadowPosion]];
+        _containerView.backgroundColor = [UIColor clearColor];
+        _containerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        _containerView.clipsToBounds = YES;
+        [self addSubview:_containerView];
+        
         _pageVC = pageVC;
         _pageVC.view.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];
-        [self addSubview:pageVC.view];
+        [_containerView addSubview:pageVC.view];
         
         _shadowPosion = ShadowPosion_None;
         _shadowImageView = [[UIImageView alloc] init];
@@ -76,7 +83,9 @@
 }
 
 -(void)setShadowPosion:(PageAnimationViewShadowPosition)shadowPosion{
-    _shadowPosion = shadowPosion;
+    _shadowPosion = shadowPosion;    
+    _containerView.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];
+
     if (shadowPosion == ShadowPosion_None) {
         [_shadowImageView setHidden:YES];
         _shadowImageView.image = nil;
@@ -99,6 +108,7 @@
         
         _shadowImageView.image = shadowImage;
         
+        _containerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         return;
     }
     
@@ -108,27 +118,32 @@
         _shadowImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
         UIImage *shadowImage = [UIImage imageNamed:@"shadow.png"];
-//        shadowImage = [[UIImage alloc] initWithCGImage:shadowImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
-        CGFloat top = 0; // 顶端盖高度
-        CGFloat bottom = 0 ; // 底端盖高度
-        CGFloat left = shadowImage.size.width/2-1; // 左端盖宽度
-        CGFloat right = shadowImage.size.width/2+1; // 右端盖宽度
+        shadowImage = [[UIImage alloc] initWithCGImage:shadowImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
+        CGFloat top = shadowImage.size.height / 2 - 1; // 顶端盖高度
+        CGFloat bottom = shadowImage.size.height / 2 + 1 ; // 底端盖高度
+        CGFloat left = 0; // 左端盖宽度
+        CGFloat right = 0; // 右端盖宽度
         UIEdgeInsets insets = UIEdgeInsetsMake(top, left, bottom, right);
         shadowImage = [shadowImage resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
         _shadowImageView.image = shadowImage;
         
+        _containerView.autoresizingMask = UIViewAutoresizingNone;
         return;
     }
     
     if (shadowPosion == ShadowPosion_Top) {
         _shadowImageView.frame = (CGRect){0,0,CGRectGetWidth(self.frame),kShadowWidth};
         _shadowImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        
+        _containerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         return;
     }
     
     if (shadowPosion == ShadowPosion_Left) {
         _shadowImageView.frame = (CGRect){0,CGRectGetHeight(self.frame),kShadowWidth,CGRectGetHeight(self.frame)};
         _shadowImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        
+        _containerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         return;
     }
 }
@@ -137,6 +152,7 @@
     [super setFrame:frame];
     if (self.shadowPosion == ShadowPosion_Bottom) {
         _shadowImageView.frame = (CGRect){0,CGRectGetMaxY(frame)-kShadowWidth,CGRectGetWidth(frame),kShadowWidth};
+        _containerView.frame = (CGRect){0,0,CGRectGetWidth(frame),CGRectGetHeight(frame)-kShadowWidth};
     }
 }
 

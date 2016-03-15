@@ -324,12 +324,12 @@
         [allAnimationViewsStack insertObject:reuseView atIndex:0];
         [animationController.view bringSubviewToFront:(UIView*)reuseView];
         
-        [currentView setShadowPosion:ShadowPosion_Bottom];
         currentView.isAnimationg = YES;
         ///滑出
         CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Bottom];
         CGRect pageViewRect = [PageAnimationView pageViewFrameWithShadowPosion:ShadowPosion_Bottom];
         for (PageAnimationView *sub in allAnimationViewsStack) {
+            [sub setShadowPosion:ShadowPosion_Bottom];
             if (sub != reuseView) {
                 sub.frame = rect;
             }else{

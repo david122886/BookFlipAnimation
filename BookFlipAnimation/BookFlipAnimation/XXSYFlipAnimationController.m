@@ -624,6 +624,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - 自动翻页设置
 -(void)startAutoReadWithSpeed:(CGFloat)speed{
+    if (self.autoReadStatus == AutoReadStatus_beginning || self.autoReadStatus == AutoReadStatus_pause) {
+        return;
+    }
     self.autoReadSpeed = speed;
     _tmpOldFlipTypeBeforeAutoRead = self.animationType;
     [self changeFlipAnimationType:FlipAnimationType_auto];
@@ -641,11 +644,14 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)stopAutoRead{
-
     if (self.autoReadTimer) {
         [self.autoReadTimer invalidate];
     }
     self.autoReadTimer = nil;
+    
+    if (self.autoReadStatus == AutoReadStatus_stop) {
+        return;
+    }
     
     _autoReadStatus = AutoReadStatus_stop;
     PageAnimationView *needPageAnimationView = self.tmpPanNeedPageAnimationView;
@@ -717,7 +723,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         return;
     }
     
-    if (CGRectGetHeight(self.autoReadAnimatingView.bounds) > CGRectGetHeight(self.view.frame)) {
+    if (CGRectGetHeight(self.autoReadAnimatingView.bounds) > CGRectGetHeight(self.view.frame)+kShadowWidth) {
         PageAnimationView *needPageAnimationView = self.tmpPanNeedPageAnimationView;
         PageAnimationView *currentPageAnimationView = self.tmpPanCurrentPageAnimationView;
         if (!needPageAnimationView) {
