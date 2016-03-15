@@ -29,7 +29,6 @@ typedef NS_ENUM(NSInteger, FlipAnimationDirection) {
 ///自动阅读状态
 typedef NS_ENUM(NSInteger,AutoReadStatus){
     AutoReadStatus_none,
-    AutoReadStatus_start,
     AutoReadStatus_pause,
     AutoReadStatus_stop,
     AutoReadStatus_beginning

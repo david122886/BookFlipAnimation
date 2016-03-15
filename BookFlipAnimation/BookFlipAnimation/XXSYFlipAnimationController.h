@@ -105,6 +105,9 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 
 
 #pragma mark - 自动翻页设置
+
+@property (assign,nonatomic,readonly) AutoReadStatus autoReadStatus;
+
 -(void)startAutoReadWithSpeed:(CGFloat)speed;
 -(void)stopAutoRead;
 -(void)pauseAutoRead;

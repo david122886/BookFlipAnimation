@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger,PageAnimationViewShadowPosition){
 @interface PageAnimationView : UIView
 @property (strong,nonatomic,readonly) XXSYPageViewController *pageVC;
 @property (assign,nonatomic,readonly) PageAnimationViewShadowPosition shadowPosion;
-
+@property (assign,nonatomic) BOOL isAnimationg;
 -(instancetype)initWithShadowPosion:(PageAnimationViewShadowPosition)shadowPosion withPageVC:(XXSYPageViewController*)pageVC;
 -(void)setShadowPosion:(PageAnimationViewShadowPosition)shadowPosion;
 @end

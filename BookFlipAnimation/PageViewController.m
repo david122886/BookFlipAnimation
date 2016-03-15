@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.text = [[UILabel  alloc] initWithFrame:self.view.bounds];
-    self.text.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.text.autoresizingMask = UIViewAutoresizingNone;
     [self.text setTextAlignment:NSTextAlignmentCenter];
     [self.text setFont:[UIFont systemFontOfSize:80]];
     [self.view addSubview:self.text];

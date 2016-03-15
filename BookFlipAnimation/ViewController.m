@@ -147,6 +147,6 @@
 }
 
 - (IBAction)speedAdd:(id)sender {
-    [self.animationController setupSpeed:30];
+    [self.animationController setupSpeed:60];
 }
 @end
