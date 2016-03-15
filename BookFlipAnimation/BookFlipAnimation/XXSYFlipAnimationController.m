@@ -87,10 +87,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     return nil;
 }
 
-//-(XXSYPageViewController*)currentPageVC{
-//    PageAnimationView *animationView = [self.reusePageAnimationViewArray firstObject];
-//    return animationView.pageVC;
-//}
+-(XXSYPageViewController*)currentPageVC{
+    PageAnimationView *animationView = [self getCurrentPageAnimationView];
+    return animationView.pageVC;
+}
 
 -(void)setupInitPageViewController:(XXSYPageViewController*)pageVC withFlipAnimationType:(FlipAnimationType)animationType{
     if (!pageVC) {
