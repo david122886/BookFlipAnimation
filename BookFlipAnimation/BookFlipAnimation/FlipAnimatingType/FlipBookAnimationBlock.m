@@ -327,13 +327,15 @@
         [currentView setShadowPosion:ShadowPosion_Bottom];
         currentView.isAnimationg = YES;
         ///滑出
+        CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Bottom];
+        CGRect pageViewRect = [PageAnimationView pageViewFrameWithShadowPosion:ShadowPosion_Bottom];
         for (PageAnimationView *sub in allAnimationViewsStack) {
             if (sub != reuseView) {
-                sub.frame = [[UIScreen mainScreen] bounds];
+                sub.frame = rect;
             }else{
-                sub.frame = (CGRect){0,0,CGRectGetWidth([[UIScreen mainScreen] bounds]),0};
+                sub.frame = (CGRect){0,0,CGRectGetWidth(rect),0};
             }
-            sub.pageVC.view.frame = [[UIScreen mainScreen] bounds];
+            sub.pageVC.view.frame = pageViewRect;
         }
     };
 }
@@ -354,9 +356,12 @@
         
         [reuseView setShadowPosion:ShadowPosion_None];
         
+        CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Right];
+        CGRect pageViewRect = [PageAnimationView pageViewFrameWithShadowPosion:ShadowPosion_Right];
         for (PageAnimationView *sub in allAnimationViewsStack) {
             sub.isAnimationg = NO;
-            sub.frame = animationController.view.bounds;
+            sub.frame = rect;
+            sub.pageVC.view.frame = pageViewRect;
         }
     };
 }

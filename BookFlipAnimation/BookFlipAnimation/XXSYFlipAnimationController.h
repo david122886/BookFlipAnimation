@@ -72,7 +72,7 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 -(void)registerPageVCForClass:(Class)pageVCClass;
 
 -(NSArray*)childenPageControllers;
--(XXSYPageViewController*)currentPageVC;
+//-(XXSYPageViewController*)currentPageVC;
 -(void)setupInitPageViewController:(XXSYPageViewController*)pageVC withFlipAnimationType:(FlipAnimationType)animationType;
 #pragma mark -
 
