@@ -94,7 +94,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll];
 }
 
 - (void)didReceiveMemoryWarning {

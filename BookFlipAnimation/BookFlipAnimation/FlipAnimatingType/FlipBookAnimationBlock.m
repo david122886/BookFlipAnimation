@@ -41,15 +41,21 @@
             [allAnimationViewsStack insertObject:reuseView atIndex:0];
             [animationController.view bringSubviewToFront:(UIView*)reuseView];
             
-            [reuseView setShadowPosion:ShadowPosion_Right];
-            
             ///滑入
             reuseView.isAnimationg = YES;
             UIView *animationView = reuseView;
-            animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-            for (UIView *tmpView in allAnimationViewsStack) {
-                if (tmpView != reuseView) {
-                    tmpView.frame = (CGRect){0,0,animationView.frame.size};
+            CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Right];
+            CGRect otherRect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
+            
+            animationView.frame = CGRectOffset((CGRect){0,0,rect.size}, -CGRectGetWidth(rect), 0);
+            
+            for (PageAnimationView *sub in allAnimationViewsStack) {
+                if (sub == reuseView) {
+                    [sub setShadowPosion:ShadowPosion_Right];
+                }else{
+                    sub.frame = otherRect;
+                    [sub setShadowPosion:ShadowPosion_None];
+                    sub.isAnimationg = NO;
                 }
             }
         }
@@ -63,11 +69,20 @@
             [allAnimationViewsStack insertObject:currentView atIndex:0];
             [animationController.view bringSubviewToFront:(UIView*)currentView];
             
-            [currentView setShadowPosion:ShadowPosion_Right];
             currentView.isAnimationg = YES;
             ///滑出
-            for (UIView *sub in allAnimationViewsStack) {
-                sub.frame = sub.bounds;
+            CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
+            CGRect animationRect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Right];
+            
+            for (PageAnimationView *sub in allAnimationViewsStack) {
+                if (sub == currentView) {
+                    sub.frame = animationRect;
+                    [sub setShadowPosion:ShadowPosion_Right];
+                }else{
+                    sub.frame = rect;
+                    [sub setShadowPosion:ShadowPosion_None];
+                    sub.isAnimationg = NO;
+                }
             }
         }
     };
@@ -88,9 +103,6 @@
                 [allAnimationViewsStack removeObject:reuseView];
                 [allAnimationViewsStack insertObject:reuseView atIndex:0];
                 [animationController.view bringSubviewToFront:(UIView*)reuseView];
-                
-                [reuseView setShadowPosion:ShadowPosion_None];
-                
             }
             
             if (originDirection == FlipAnimationDirection_FromRightToLeft) {
@@ -101,26 +113,28 @@
                 [allAnimationViewsStack removeObject:reuseView];
                 [allAnimationViewsStack insertObject:reuseView atIndex:0];
                 [animationController.view bringSubviewToFront:(UIView*)reuseView];
-                
-                [currentView setShadowPosion:ShadowPosion_None];
-                
             }
             
+            CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
             if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
                 ///滑入
-                for (UIView *sub in allAnimationViewsStack) {
-                    sub.frame = sub.bounds;
+                for (PageAnimationView *sub in allAnimationViewsStack) {
+                    sub.frame = (CGRect){0,0,rect.size};
+                    sub.isAnimationg = NO;
+                    [sub setShadowPosion:ShadowPosion_None];
                 }
                 
                 return;
             }
             ///滑出
             UIView *animationView = currentView;
-            animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-            for (UIView *tmpView in allAnimationViewsStack) {
+            animationView.frame = CGRectOffset((CGRect){0,0,rect.size}, -CGRectGetWidth(rect), 0);
+            for (PageAnimationView *tmpView in allAnimationViewsStack) {
                 if (tmpView != currentView) {
-                    tmpView.frame = animationView.bounds;
+                    tmpView.frame = (CGRect){0,0,rect.size};
                 }
+                tmpView.isAnimationg = NO;
+                [tmpView setShadowPosion:ShadowPosion_None];
             }
             
         }else{
@@ -133,15 +147,16 @@
                 [allAnimationViewsStack insertObject:currentView atIndex:0];
                 [animationController.view bringSubviewToFront:(UIView*)currentView];
                 
-                [reuseView setShadowPosion:ShadowPosion_None];
-                
                 ///滑出
+                CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
                 UIView *animationView = reuseView;
-                animationView.frame = CGRectOffset(animationView.bounds, -CGRectGetWidth(animationView.bounds), 0);
-                for (UIView *tmpView in allAnimationViewsStack) {
+                animationView.frame = CGRectOffset((CGRect){0,0,rect.size}, -CGRectGetWidth(rect), 0);
+                for (PageAnimationView *tmpView in allAnimationViewsStack) {
                     if (tmpView != currentView) {
-                        tmpView.frame = animationView.bounds;
+                        tmpView.frame = (CGRect){0,0,rect.size};
                     }
+                    tmpView.isAnimationg = NO;
+                    [tmpView setShadowPosion:ShadowPosion_None];
                 }
             }
             
@@ -149,11 +164,12 @@
                 [allAnimationViewsStack removeObject:currentView];
                 [allAnimationViewsStack insertObject:currentView atIndex:0];
                 [animationController.view bringSubviewToFront:(UIView*)currentView];
-                [currentView setShadowPosion:ShadowPosion_None];
-                
                 ///滑入
-                for (UIView *sub in allAnimationViewsStack) {
-                    sub.frame = sub.bounds;
+                CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
+                for (PageAnimationView *sub in allAnimationViewsStack) {
+                    sub.frame = (CGRect){0,0,rect.size};
+                    sub.isAnimationg = NO;
+                    [sub setShadowPosion:ShadowPosion_None];
                 }
             }
             
@@ -162,9 +178,6 @@
             
         }
         
-        for (PageAnimationView *sub in allAnimationViewsStack) {
-            sub.isAnimationg = NO;
-        }
     };
 }
 
@@ -230,8 +243,11 @@
         [reuseView setShadowPosion:ShadowPosion_None];
         [currentView setShadowPosion:ShadowPosion_None];
         
-        for (UIView *sub in allAnimationViewsStack) {
-            sub.frame = sub.bounds;
+        CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
+        for (PageAnimationView *sub in allAnimationViewsStack) {
+            sub.frame = rect;
+            [sub setShadowPosion:ShadowPosion_None];
+            sub.isAnimationg = YES;
         }
         
         if (originDirection == FlipAnimationDirection_FromLeftToRight) {
@@ -240,10 +256,6 @@
         
         if (originDirection == FlipAnimationDirection_FromRightToLeft) {
             reuseView.frame = CGRectOffset(currentView.bounds, CGRectGetWidth(currentView.bounds), 0);
-        }
-        
-        for (PageAnimationView *sub in allAnimationViewsStack) {
-            sub.isAnimationg = YES;
         }
     };
 }
@@ -262,10 +274,12 @@
             [allAnimationViewsStack insertObject:reuseView atIndex:0];
             [animationController.view bringSubviewToFront:(UIView*)reuseView];
             
-//            [currentView setShadowPosion:ShadowPosion_None];
-            for (UIView *sub in allAnimationViewsStack) {
-                sub.frame = sub.bounds;
+            CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
+            for (PageAnimationView *sub in allAnimationViewsStack) {
+                sub.frame = rect;
+                sub.isAnimationg = NO;
             }
+            
             if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
                 currentView.frame = CGRectOffset(currentView.bounds, CGRectGetWidth(currentView.frame), 0);
             }
@@ -283,19 +297,18 @@
             [allAnimationViewsStack insertObject:currentView atIndex:0];
             [animationController.view bringSubviewToFront:(UIView*)currentView];
             
-            for (UIView *sub in allAnimationViewsStack) {
-                sub.frame = sub.bounds;
+            CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_None];
+            for (PageAnimationView *sub in allAnimationViewsStack) {
+                sub.frame = rect;
+                sub.isAnimationg = NO;
             }
+            
             if (finalDirection == FlipAnimationDirection_FromLeftToRight) {
                 reuseView.frame = CGRectOffset(currentView.bounds, CGRectGetWidth(currentView.frame), 0);
             }
             if (finalDirection == FlipAnimationDirection_FromRightToLeft) {
                 reuseView.frame = CGRectOffset(currentView.bounds, -CGRectGetWidth(currentView.frame), 0);
             }
-        }
-        
-        for (PageAnimationView *sub in allAnimationViewsStack) {
-            sub.isAnimationg = NO;
         }
     };
 }
@@ -327,7 +340,6 @@
         currentView.isAnimationg = YES;
         ///滑出
         CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Bottom];
-        CGRect pageViewRect = [PageAnimationView pageViewFrameWithShadowPosion:ShadowPosion_Bottom];
         for (PageAnimationView *sub in allAnimationViewsStack) {
             [sub setShadowPosion:ShadowPosion_Bottom];
             if (sub != reuseView) {
@@ -335,7 +347,6 @@
             }else{
                 sub.frame = (CGRect){0,0,CGRectGetWidth(rect),0};
             }
-            sub.pageVC.view.frame = pageViewRect;
         }
     };
 }
@@ -354,14 +365,11 @@
         [allAnimationViewsStack insertObject:reuseView atIndex:0];
         [animationController.view bringSubviewToFront:(UIView*)reuseView];
         
-        [reuseView setShadowPosion:ShadowPosion_None];
-        
         CGRect rect = [PageAnimationView pageAnimationViewFrameWithShadowPosion:ShadowPosion_Right];
-        CGRect pageViewRect = [PageAnimationView pageViewFrameWithShadowPosion:ShadowPosion_Right];
         for (PageAnimationView *sub in allAnimationViewsStack) {
             sub.isAnimationg = NO;
             sub.frame = rect;
-            sub.pageVC.view.frame = pageViewRect;
+            [sub setShadowPosion:ShadowPosion_None];
         }
     };
 }

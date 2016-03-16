@@ -69,6 +69,7 @@
         
         _pageVC = pageVC;
         _pageVC.view.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];
+        _pageVC.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [_containerView addSubview:pageVC.view];
         
         _shadowPosion = ShadowPosion_None;
@@ -85,7 +86,6 @@
 -(void)setShadowPosion:(PageAnimationViewShadowPosition)shadowPosion{
     _shadowPosion = shadowPosion;    
     _containerView.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];
-
     if (shadowPosion == ShadowPosion_None) {
         [_shadowImageView setHidden:YES];
         _shadowImageView.image = nil;

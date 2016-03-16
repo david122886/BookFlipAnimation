@@ -103,6 +103,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     [self movePageAnimationViewToParent:needView];
     [self.reusePageAnimationViewArray insertObject:needView atIndex:0];
     [self.view bringSubviewToFront:needView];
+    [needView setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
     
     for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
         [pageView.pageVC animationTypeChanged:self.animationType];
