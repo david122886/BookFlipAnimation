@@ -127,7 +127,17 @@
     
 }
 
-
+/**
+ * @brief 翻页结束时调用
+ *
+ * @param  animationController
+ * @param  animation 翻页是否带动画效果
+ * @param  completed 翻页是否完成
+ *
+ */
+-(void)flipAnimationController:(XXSYFlipAnimationController*)animationController FlipFinishedHasAnimation:(BOOL)animation transitionCompleted:(BOOL)completed{
+    
+}
 #pragma mark - auto read
 - (IBAction)start:(id)sender {
     [self.animationController startAutoReadWithSpeed:30];

@@ -40,11 +40,23 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
  * @return 需要显示PageVC，如果为空表示没有数据展示
  */
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshAfterPageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC;
+
 @end
 
 @protocol XXSYFlipAnimationControllerDelegate <NSObject>
 ///弹出阅读菜单
 -(void)flipAnimationControllerPopupMenu:(XXSYFlipAnimationController*)animationController;
+
+/**
+ * @brief 翻页结束时调用
+ *
+ * @param  animationController
+ * @param  animation 翻页是否带动画效果
+ * @param  completed 翻页是否完成
+ *
+ */
+-(void)flipAnimationController:(XXSYFlipAnimationController*)animationController FlipFinishedHasAnimation:(BOOL)animation transitionCompleted:(BOOL)completed;
+
 @end
 
 #pragma mark -
@@ -82,7 +94,7 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 @property (strong,nonatomic,readonly) UIBezierPath *touchCenterBezierPath;
 
 /**
- * @brief 手势结束时处理
+ * @brief 手势结束时处理,和delegate FlipFinishedHasAnimation相同功能
  *
  * @param  flipAnimationController 手势接受viewcontroller
  * @param  gesture tap/pan Gesture

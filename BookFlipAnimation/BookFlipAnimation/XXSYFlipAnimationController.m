@@ -84,7 +84,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(NSArray*)childenPageControllers{
-    return nil;
+    NSMutableArray *childern = @[].mutableCopy;
+    for (PageAnimationView *sub in self.reusePageAnimationViewArray) {
+        [childern addObject:sub.pageVC];
+    }
+    return childern;
 }
 
 -(XXSYPageViewController*)currentPageVC{
@@ -294,6 +298,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         if (self.gestureCompletion) {
             self.gestureCompletion(self,tapGesture);
         }
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
+            [self.delegate flipAnimationController:self FlipFinishedHasAnimation:YES transitionCompleted:YES];
+        }
     }];
 }
 
@@ -326,6 +334,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         
         if (self.gestureCompletion) {
             self.gestureCompletion(self,tapGesture);
+        }
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
+            [self.delegate flipAnimationController:self FlipFinishedHasAnimation:YES transitionCompleted:YES];
         }
     }];
 }
@@ -431,6 +443,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         if (self.gestureCompletion) {
             self.gestureCompletion(self,panGesture);
         }
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
+            [self.delegate flipAnimationController:self FlipFinishedHasAnimation:YES transitionCompleted:YES];
+        }
+        
     }];
     
 }
@@ -471,6 +488,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         if (self.gestureCompletion) {
             self.gestureCompletion(self,panGesture);
         }
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
+            [self.delegate flipAnimationController:self FlipFinishedHasAnimation:YES transitionCompleted:NO];
+        }
+        
     }];
     
 }
