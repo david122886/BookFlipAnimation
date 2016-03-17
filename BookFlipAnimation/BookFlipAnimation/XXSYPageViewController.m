@@ -9,6 +9,8 @@
 #import "XXSYPageViewController.h"
 
 @interface XXSYPageViewController ()
+///是否是反面页,仿真翻页专用
+@property (assign,nonatomic,readonly) BOOL isPaperBack;
 @end
 
 @implementation XXSYPageViewController
@@ -87,6 +89,7 @@
 
 ///清楚所有数据，准备接受新数据
 -(void)clearAllPageData{
+    _isPaperBack = NO;
     
 }
 
@@ -102,6 +105,19 @@
 -(void)animationTypeChanged:(FlipAnimationType)animationType{
     _animationType = animationType;
 }
+
+#pragma mark - 仿真翻页使用
+-(BOOL)isDrawBackForFlipCurl{
+    return _isPaperBack;
+}
+-(void)setDrawBackForFlipCurl:(BOOL)drawBack{
+    _isPaperBack = drawBack;
+}
+-(void)copyPageVCDataWithVC:(id<XXSYPageVCProtocol>)pageVC withIsDrawBack:(BOOL)drawBack{
+    _isPaperBack = drawBack;
+    
+}
+
 #pragma mark - setter
 
 @end

@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "Constent.h"
 #import "ReadDataProperty.h"
+/**
+ * 用户不能直接调用这些接口，只能重载
+ */
 @protocol XXSYPageVCProtocol <NSObject>
 
 #pragma mark - 动画效果
@@ -44,4 +47,10 @@
 -(void)currentPageVCChanged:(BOOL)isCurrentPageVC;
 -(void)flipAnimationStatusChanged:(BOOL)isFlipAnimating;
 -(void)animationTypeChanged:(FlipAnimationType)animationType;
+
+#pragma mark - 仿真翻页使用
+-(BOOL)isDrawBackForFlipCurl;
+-(void)setDrawBackForFlipCurl:(BOOL)drawBack;
+-(void)copyPageVCDataWithVC:(id<XXSYPageVCProtocol>)pageVC withIsDrawBack:(BOOL)drawBack;
+
 @end

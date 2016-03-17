@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oBt-RG-LSq">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oBt-RG-LSq">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="GeP-rQ-ua6"/>
@@ -40,7 +40,7 @@
                                     <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WCr-Be-H09"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ny-Tl-VlP">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ny-Tl-VlP">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="142" id="jfY-uQ-Zmf"/>
@@ -63,7 +63,7 @@
                                     <action selector="stop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PN4-rK-BXU"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hPv-MR-Sln">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hPv-MR-Sln">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="3rp-dG-NhR"/>
@@ -86,7 +86,7 @@
                                     <action selector="pause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tMp-JR-fQM"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cc8-h5-f0s">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cc8-h5-f0s">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="9Ue-h6-SiX"/>
@@ -109,7 +109,7 @@
                                     <action selector="resume:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tE1-QL-hpB"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ikF-Xl-Wzl">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ikF-Xl-Wzl">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="139" id="PdN-Xl-1eg"/>
@@ -132,7 +132,7 @@
                                     <action selector="speed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ihy-hg-b59"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WyT-DW-g4s">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WyT-DW-g4s">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="139" id="b3S-Nq-w3o"/>
@@ -145,8 +145,7 @@
                                         <exclude reference="qp0-8X-E4p"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="129" y="635" width="139" height="55"/>
+                                <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="b3S-Nq-w3o"/>
                                         <include reference="qp0-8X-E4p"/>
@@ -182,18 +181,18 @@
                                 <exclude reference="WyT-DW-g4s"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="0Oy-R2-mZr"/>
-                                <exclude reference="Ovf-Sm-l1K"/>
                                 <exclude reference="Tei-49-zUo"/>
                                 <exclude reference="ZxO-a9-b1a"/>
-                                <exclude reference="VzI-Kp-9bZ"/>
-                                <exclude reference="sJG-XA-N7q"/>
                                 <exclude reference="jMQ-NM-kEA"/>
                                 <exclude reference="phO-xU-2lL"/>
-                                <exclude reference="fd7-kR-uXH"/>
-                                <exclude reference="hv0-yG-LQC"/>
                                 <exclude reference="LHR-tJ-8zt"/>
                                 <exclude reference="Taf-Di-yDJ"/>
+                                <exclude reference="VzI-Kp-9bZ"/>
+                                <exclude reference="sJG-XA-N7q"/>
+                                <exclude reference="fd7-kR-uXH"/>
+                                <exclude reference="hv0-yG-LQC"/>
+                                <exclude reference="0Oy-R2-mZr"/>
+                                <exclude reference="Ovf-Sm-l1K"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -206,18 +205,18 @@
                                 <include reference="WyT-DW-g4s"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="0Oy-R2-mZr"/>
-                                <include reference="Ovf-Sm-l1K"/>
                                 <include reference="Tei-49-zUo"/>
                                 <include reference="ZxO-a9-b1a"/>
-                                <include reference="VzI-Kp-9bZ"/>
-                                <include reference="sJG-XA-N7q"/>
                                 <include reference="jMQ-NM-kEA"/>
                                 <include reference="phO-xU-2lL"/>
-                                <include reference="fd7-kR-uXH"/>
-                                <include reference="hv0-yG-LQC"/>
                                 <include reference="LHR-tJ-8zt"/>
                                 <include reference="Taf-Di-yDJ"/>
+                                <include reference="VzI-Kp-9bZ"/>
+                                <include reference="sJG-XA-N7q"/>
+                                <include reference="fd7-kR-uXH"/>
+                                <include reference="hv0-yG-LQC"/>
+                                <include reference="0Oy-R2-mZr"/>
+                                <include reference="Ovf-Sm-l1K"/>
                             </mask>
                         </variation>
                     </view>
