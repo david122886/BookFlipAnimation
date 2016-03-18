@@ -128,6 +128,11 @@
     NSLog(@"%ld-%@- copyPageVCDataWithVC ",self.index,self.isBack?@"Back":@"Front");
 }
 
+-(void)setDrawBackForFlipCurl:(BOOL)drawBack{
+    [super setDrawBackForFlipCurl:drawBack];
+    _isBack = drawBack;
+    
+}
 /*
 #pragma mark - Navigation
 

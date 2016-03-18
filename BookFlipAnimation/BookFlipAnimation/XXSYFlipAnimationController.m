@@ -534,9 +534,13 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     }
     XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:backPageVC];
     
+    [self pageVCBeginningWithNeedPageVC:backPageVC withCurrentPageVC:currentPageVC];
+    [self pageVCBeginningWithNeedPageVC:needPageVC withCurrentPageVC:nil];
+    
     __weak typeof(self) weakSelf = self;
     [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
-        [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+        [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+        [weakSelf pageVCDidFinishedWithNeedPageVC:backPageVC withCurrentPageVC:nil withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
         
         if (weakSelf.gestureCompletion) {
             weakSelf.gestureCompletion(weakSelf,tapGesture);
@@ -558,9 +562,14 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     if (!needPageVC) {
         return;
     }
+    
+    [self pageVCBeginningWithNeedPageVC:backPageVC withCurrentPageVC:currentPageVC];
+    [self pageVCBeginningWithNeedPageVC:needPageVC withCurrentPageVC:nil];
+    
     __weak typeof(self) weakSelf = self;
     [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-        [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
+        [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
+        [weakSelf pageVCDidFinishedWithNeedPageVC:backPageVC withCurrentPageVC:nil withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
         
         if (weakSelf.gestureCompletion) {
             weakSelf.gestureCompletion(weakSelf,tapGesture);
@@ -951,11 +960,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     XXSYPageViewController *needVC = [self getCurlFlipReusePageVC];
     XXSYPageViewController *currentVC = (XXSYPageViewController*)viewController;
-    self.tmpNeedPageVC = needVC;
-    self.tmpCurrentPageVC = currentVC;
     
     if ([currentVC isDrawBackForFlipCurl]) {
         [needVC copyPageVCDataWithVC:currentVC withIsDrawBack:NO];
+        self.tmpNeedPageVC = needVC;
         return needVC;
     }
     
@@ -965,14 +973,12 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     }else{
         needVC = [self.dataSource flipAnimationController:self refreshAfterPageVCWithReusePageVC:needVC withCurrentPageVC:currentVC];
     }
-    self.tmpNeedPageVC = needVC;
-
     if (!needVC) {
         return nil;
     }
-
-    [self pageVCBeginningWithNeedPageVC:needVC withCurrentPageVC:currentVC];
     
+    self.tmpCurrentPageVC = currentVC;
+    self.tmpBackPageVC = needVC;
     return needVC;
 }
 
@@ -981,11 +987,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     XXSYPageViewController *needVC = [self getCurlFlipReusePageVC];
     XXSYPageViewController *currentVC = (XXSYPageViewController*)viewController;
-    self.tmpNeedPageVC = needVC;
-    self.tmpCurrentPageVC = currentVC;
     
     if (![currentVC isDrawBackForFlipCurl]) {
         [needVC copyPageVCDataWithVC:currentVC withIsDrawBack:YES];
+        self.tmpBackPageVC = needVC;
+        self.tmpCurrentPageVC = currentVC;
         return needVC;
     }
     
@@ -995,30 +1001,27 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     }else{
         needVC = [self.dataSource flipAnimationController:self refreshBeforePageVCWithReusePageVC:needVC withCurrentPageVC:currentVC];
     }
-    self.tmpNeedPageVC = needVC;
-
     if (!needVC) {
         return nil;
     }
-    [self pageVCBeginningWithNeedPageVC:needVC withCurrentPageVC:currentVC];
-
+    self.tmpNeedPageVC = needVC;
     return needVC;
 }
 
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
     NSAssert(pendingViewControllers.count <= 1, @"pendingViewControllers count 不为1");
-    
-    
+    [self pageVCBeginningWithNeedPageVC:self.tmpBackPageVC withCurrentPageVC:self.tmpCurrentPageVC];
+    [self pageVCBeginningWithNeedPageVC:self.tmpNeedPageVC withCurrentPageVC:nil];
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
-    XXSYPageViewController *needVC = self.tmpNeedPageVC;
-    XXSYPageViewController *currentVC = self.tmpCurrentPageVC;
     if (!completed) {
-        [self pageVCDidCancelWithNeedPageVC:needVC withCurrentPageVC:currentVC];
+        [self pageVCDidCancelWithNeedPageVC:self.tmpNeedPageVC withCurrentPageVC:self.tmpCurrentPageVC];
+        [self pageVCDidCancelWithNeedPageVC:self.tmpBackPageVC withCurrentPageVC:nil];
     }else{
-        [self pageVCDidFinishedWithNeedPageVC:needVC withCurrentPageVC:currentVC withAnimationDirection:self.curlIsLoadAfter?FlipAnimationDirection_FromLeftToRight:FlipAnimationDirection_FromRightToLeft];
+        [self pageVCDidFinishedWithNeedPageVC:self.tmpNeedPageVC withCurrentPageVC:self.tmpCurrentPageVC withAnimationDirection:!self.curlIsLoadAfter?FlipAnimationDirection_FromLeftToRight:FlipAnimationDirection_FromRightToLeft];
+        [self pageVCDidFinishedWithNeedPageVC:self.tmpBackPageVC withCurrentPageVC:nil withAnimationDirection:!self.curlIsLoadAfter?FlipAnimationDirection_FromLeftToRight:FlipAnimationDirection_FromRightToLeft];
     }
     
     if (self.gestureCompletion) {
@@ -1038,6 +1041,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     self.tmpNeedPageVC = nil;
     self.tmpCurrentPageVC = nil;
+    self.tmpBackPageVC = nil;
 }
 
 #pragma mark - setter
