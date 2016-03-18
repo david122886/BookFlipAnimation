@@ -60,6 +60,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 @property (assign,nonatomic) BOOL curlIsLoadAfter;
 @property (strong,nonatomic) XXSYPageViewController *tmpNeedPageVC;
 @property (strong,nonatomic) XXSYPageViewController *tmpCurrentPageVC;
+@property (strong,nonatomic) XXSYPageViewController *tmpBackPageVC;
 
 @end
 
@@ -523,6 +524,53 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
 }
 
+
+-(void)curlTapGestureBeforeAnimationBegining:(UITapGestureRecognizer *)tapGesture{
+    XXSYPageViewController *currentPageVC = [self getCurlFlipCurrentPageVC];
+    NSAssert(currentPageVC != nil, @"获取当前viewcontroller为空");
+    XXSYPageViewController *backPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:currentPageVC];
+    if (!backPageVC) {
+        return;
+    }
+    XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:backPageVC];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
+        [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+        
+        if (weakSelf.gestureCompletion) {
+            weakSelf.gestureCompletion(weakSelf,tapGesture);
+        }
+        
+        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
+            [weakSelf.delegate flipAnimationController:weakSelf FlipFinishedHasAnimation:YES transitionCompleted:YES];
+        }
+    }];
+}
+
+-(void)curlTapGestureAfterAnimationBegining:(UITapGestureRecognizer *)tapGesture{
+    XXSYPageViewController *currentPageVC = [self getCurlFlipCurrentPageVC];
+    NSAssert(currentPageVC != nil, @"获取当前viewcontroller为空");
+    XXSYPageViewController *backPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerAfterViewController:currentPageVC];
+    
+    XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerAfterViewController:backPageVC];
+    
+    if (!needPageVC) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
+        [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
+        
+        if (weakSelf.gestureCompletion) {
+            weakSelf.gestureCompletion(weakSelf,tapGesture);
+        }
+        
+        if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
+            [weakSelf.delegate flipAnimationController:weakSelf FlipFinishedHasAnimation:YES transitionCompleted:YES];
+        }
+    }];
+}
 #pragma mark - Gesture Type
 -(void)autoReadTapGestureHandle:(UITapGestureRecognizer *)tapGesture{
     if (self.autoReadStatus == AutoReadStatus_pause) {
@@ -540,50 +588,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     if ([self.touchAfterBezierPath containsPoint:point]) {
         ///下翻页
         if ([self touchFromLeftToRightIsAfter]) {
-            XXSYPageViewController *currentPageVC = [self getCurlFlipCurrentPageVC];
-            NSAssert(currentPageVC != nil, @"获取当前viewcontroller为空");
-            XXSYPageViewController *backPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerAfterViewController:currentPageVC];
-            
-            XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerAfterViewController:backPageVC];
-            
-            if (!needPageVC) {
-                return;
-            }
-            __weak typeof(self) weakSelf = self;
-            [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-                [weakSelf pageVCDidFinishedWithNeedPageVC:backPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-                [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-                
-                if (weakSelf.gestureCompletion) {
-                    weakSelf.gestureCompletion(weakSelf,tapGesture);
-                }
-                
-                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
-                    [weakSelf.delegate flipAnimationController:weakSelf FlipFinishedHasAnimation:YES transitionCompleted:YES];
-                }
-            }];
+            [self curlTapGestureAfterAnimationBegining:tapGesture];
         }else{
-            XXSYPageViewController *currentPageVC = [self getCurlFlipCurrentPageVC];
-            NSAssert(currentPageVC != nil, @"获取当前viewcontroller为空");
-            XXSYPageViewController *backPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:currentPageVC];
-            if (!backPageVC) {
-                return;
-            }
-            XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:backPageVC];
-            
-            __weak typeof(self) weakSelf = self;
-            [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
-                [weakSelf pageVCDidFinishedWithNeedPageVC:backPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-                [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
-                
-                if (weakSelf.gestureCompletion) {
-                    weakSelf.gestureCompletion(weakSelf,tapGesture);
-                }
-                
-                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
-                    [weakSelf.delegate flipAnimationController:weakSelf FlipFinishedHasAnimation:YES transitionCompleted:YES];
-                }
-            }];
+            [self curlTapGestureBeforeAnimationBegining:tapGesture];
         }
         
         return;
@@ -600,50 +607,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     if ([self.touchBeforeBezierPath containsPoint:point]) {
         ///上翻页
         if ([self touchFromLeftToRightIsAfter]) {
-            XXSYPageViewController *currentPageVC = [self getCurlFlipCurrentPageVC];
-            NSAssert(currentPageVC != nil, @"获取当前viewcontroller为空");
-            XXSYPageViewController *backPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:currentPageVC];
-            if (!backPageVC) {
-                return;
-            }
-            XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerBeforeViewController:backPageVC];
-            
-            __weak typeof(self) weakSelf = self;
-            [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished) {
-                [weakSelf pageVCDidFinishedWithNeedPageVC:backPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-                [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
-                
-                if (weakSelf.gestureCompletion) {
-                    weakSelf.gestureCompletion(weakSelf,tapGesture);
-                }
-                
-                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
-                    [weakSelf.delegate flipAnimationController:weakSelf FlipFinishedHasAnimation:YES transitionCompleted:YES];
-                }
-            }];
+            [self curlTapGestureBeforeAnimationBegining:tapGesture];
         }else{
-            XXSYPageViewController *currentPageVC = [self getCurlFlipCurrentPageVC];
-            NSAssert(currentPageVC != nil, @"获取当前viewcontroller为空");
-            XXSYPageViewController *backPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerAfterViewController:currentPageVC];
-            
-            XXSYPageViewController *needPageVC = (XXSYPageViewController*)[self pageViewController:self.curlPageViewController viewControllerAfterViewController:backPageVC];
-            
-            if (!needPageVC) {
-                return;
-            }
-            __weak typeof(self) weakSelf = self;
-            [self.curlPageViewController setViewControllers:@[needPageVC,backPageVC] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-                [weakSelf pageVCDidFinishedWithNeedPageVC:backPageVC withCurrentPageVC:currentPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-                [weakSelf pageVCDidFinishedWithNeedPageVC:needPageVC withCurrentPageVC:backPageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-                
-                if (weakSelf.gestureCompletion) {
-                    weakSelf.gestureCompletion(weakSelf,tapGesture);
-                }
-                
-                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(flipAnimationController:FlipFinishedHasAnimation:transitionCompleted:)]) {
-                    [weakSelf.delegate flipAnimationController:weakSelf FlipFinishedHasAnimation:YES transitionCompleted:YES];
-                }
-            }];
+            [self curlTapGestureAfterAnimationBegining:tapGesture];
         }
         
         return;
@@ -1041,8 +1007,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
-//    NSAssert(self.reuseCurlPageVCArray.count > 1, @"缓存数据个数少于2个");
-//    [self pageVCBeginningWithNeedPageVC:[self.reuseCurlPageVCArray firstObject] withCurrentPageVC:self.reuseCurlPageVCArray[1]];
+    NSAssert(pendingViewControllers.count <= 1, @"pendingViewControllers count 不为1");
+    
+    
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
