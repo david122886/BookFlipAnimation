@@ -22,10 +22,10 @@
 		66FA19A61C86887F0096BC40 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66FA19A41C86887F0096BC40 /* Main.storyboard */; };
 		66FA19A81C86887F0096BC40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66FA19A71C86887F0096BC40 /* Assets.xcassets */; };
 		66FA19AB1C86887F0096BC40 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66FA19A91C86887F0096BC40 /* LaunchScreen.storyboard */; };
-		66FA19B51C868BE20096BC40 /* XXSYReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */; };
 		66FA19B81C868BF80096BC40 /* XXSYPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */; };
 		66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19BA1C869BA20096BC40 /* XXSYFlipAnimationController.m */; };
 		66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */; };
+		EB0CE6331C9BD31700702712 /* ScrollVerticalFlipView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0CE6321C9BD31700702712 /* ScrollVerticalFlipView.m */; };
 		EB7270251C901A1F00451EF6 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7270241C901A1F00451EF6 /* PageViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -59,8 +59,6 @@
 		66FA19A71C86887F0096BC40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66FA19AA1C86887F0096BC40 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		66FA19AC1C86887F0096BC40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		66FA19B31C868BE20096BC40 /* XXSYReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYReaderViewController.h; sourceTree = "<group>"; };
-		66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXSYReaderViewController.m; sourceTree = "<group>"; };
 		66FA19B61C868BF80096BC40 /* XXSYPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYPageViewController.h; sourceTree = "<group>"; };
 		66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXSYPageViewController.m; sourceTree = "<group>"; };
 		66FA19B91C869BA20096BC40 /* XXSYFlipAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYFlipAnimationController.h; sourceTree = "<group>"; };
@@ -69,6 +67,8 @@
 		66FA19C11C86D2900096BC40 /* XXSYPageVCProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXSYPageVCProtocol.h; sourceTree = "<group>"; };
 		66FA19C21C86E91A0096BC40 /* ReadDataProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadDataProperty.h; sourceTree = "<group>"; };
 		66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadDataProperty.m; sourceTree = "<group>"; };
+		EB0CE6311C9BD31700702712 /* ScrollVerticalFlipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollVerticalFlipView.h; sourceTree = "<group>"; };
+		EB0CE6321C9BD31700702712 /* ScrollVerticalFlipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollVerticalFlipView.m; sourceTree = "<group>"; };
 		EB7270231C901A1F00451EF6 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
 		EB7270241C901A1F00451EF6 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,9 +151,8 @@
 		66FA19B21C868B840096BC40 /* BookFlipAnimation */ = {
 			isa = PBXGroup;
 			children = (
+				EB0CE6301C9BD0CF00702712 /* scrollVAnimationType */,
 				66F3BBDB1C898F1900F7C56C /* FlipAnimatingType */,
-				66FA19B31C868BE20096BC40 /* XXSYReaderViewController.h */,
-				66FA19B41C868BE20096BC40 /* XXSYReaderViewController.m */,
 				66FA19C11C86D2900096BC40 /* XXSYPageVCProtocol.h */,
 				66FA19B61C868BF80096BC40 /* XXSYPageViewController.h */,
 				66FA19B71C868BF80096BC40 /* XXSYPageViewController.m */,
@@ -169,6 +168,15 @@
 				66FA19C01C869CBF0096BC40 /* Constent.h */,
 			);
 			path = BookFlipAnimation;
+			sourceTree = "<group>";
+		};
+		EB0CE6301C9BD0CF00702712 /* scrollVAnimationType */ = {
+			isa = PBXGroup;
+			children = (
+				EB0CE6311C9BD31700702712 /* ScrollVerticalFlipView.h */,
+				EB0CE6321C9BD31700702712 /* ScrollVerticalFlipView.m */,
+			);
+			path = scrollVAnimationType;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,6 +249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB0CE6331C9BD31700702712 /* ScrollVerticalFlipView.m in Sources */,
 				66FA19A31C86887E0096BC40 /* ViewController.m in Sources */,
 				66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */,
 				66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */,
@@ -256,7 +265,6 @@
 				66FA19A01C86887E0096BC40 /* AppDelegate.m in Sources */,
 				660B50DE1C87DA9A000E0BF1 /* XXSYFlipAnimationController+PageProperty.m in Sources */,
 				66FA199D1C86887E0096BC40 /* main.m in Sources */,
-				66FA19B51C868BE20096BC40 /* XXSYReaderViewController.m in Sources */,
 				660B50ED1C87ED45000E0BF1 /* XXSYFlipAnimationController+PageContent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

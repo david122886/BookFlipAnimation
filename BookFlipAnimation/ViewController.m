@@ -12,6 +12,8 @@
 #import "FlipBookAnimationManager.h"
 #import "PageViewController.h"
 
+#import "ScrollVerticalFlipView.h"
+
 @interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
 
@@ -21,6 +23,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:nil];
+    [self.view addSubview:flipView];
+    flipView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    
+    return;
+    
+    
     _animationController = [[XXSYFlipAnimationController alloc] init];
     [self.animationController registerPageVCForClass:[PageViewController class]];
     self.animationController.delegate = self;
@@ -94,7 +103,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_curl];
 }
 
 - (void)didReceiveMemoryWarning {

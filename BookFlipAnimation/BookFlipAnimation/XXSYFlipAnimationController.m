@@ -114,10 +114,20 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     _isFlipAnimating = NO;
     
     if (animationType == FlipAnimationType_curl) {
-        [self setupCurlPageViewControllerWithPageVC:pageVC];
+        [self setupInitPageViewControllerForCurl:pageVC];
         return;
     }
-    
+    if (animationType == FlipAnimationType_cover || animationType == FlipAnimationType_scroll) {
+        [self setupInitPageViewControllerForCoverAndScroll:pageVC];
+        return;
+    }
+    if (animationType == FlipAnimationType_scroll_V) {
+        [self setupInitPageViewControllerForScroll_V:pageVC];
+        return;
+    }
+}
+#pragma mark - init helpers
+-(void)setupInitPageViewControllerForCoverAndScroll:(XXSYPageViewController*)pageVC{
     PageAnimationView *needView = [[PageAnimationView alloc] initWithShadowPosion:[self pageShadowPosionWithFlipType:self.animationType] withPageVC:pageVC];
     
     [self movePageAnimationViewToParent:needView];
@@ -128,7 +138,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
         [pageView.pageVC animationTypeChanged:self.animationType];
         [pageView.pageVC flipAnimationStatusChanged:NO];
-
+        
         if (pageView.pageVC != pageVC) {
             [pageView.pageVC currentPageVCChanged:NO];
             [pageView.pageVC willMoveToBack];
@@ -140,9 +150,18 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
             [pageView.pageVC didMoveToFrontWithDirection:FlipAnimationDirection_None];
         }
     }
+    
+    [self.panGesture setEnabled:YES];
 }
-#pragma mark - init
 
+-(void)setupInitPageViewControllerForCurl:(XXSYPageViewController*)pageVC{
+    [self.panGesture setEnabled:NO];
+    [self setupCurlPageViewControllerWithPageVC:pageVC];
+}
+
+-(void)setupInitPageViewControllerForScroll_V:(XXSYPageViewController*)pageVC{
+    [self.panGesture setEnabled:NO];
+}
 
 #pragma mark - helpers
 -(void)setupGestureRecognizers{
@@ -158,6 +177,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     [tap requireGestureRecognizerToFail:pan];
     
+    if (self.animationType == FlipAnimationType_curl || self.animationType == FlipAnimationType_scroll_V) {
+        [pan setEnabled:NO];
+    }else{
+        [pan setEnabled:YES];
+    }
 }
 
 #pragma mark - pageVC
@@ -933,9 +957,13 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     self.curlPageViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self addChildViewController:self.curlPageViewController];
     [self.curlPageViewController didMoveToParentViewController:self];
-        
+    
+    [pageVC flipAnimationStatusChanged:NO];
+    [pageVC currentPageVCChanged:YES];
+    [pageVC willMoveToFront];
+    
     [self.curlPageViewController setViewControllers:@[pageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-        
+        [pageVC didMoveToFrontWithDirection:FlipAnimationDirection_None];
     }];
 }
 
