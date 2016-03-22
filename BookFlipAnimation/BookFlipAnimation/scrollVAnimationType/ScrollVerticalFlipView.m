@@ -37,6 +37,10 @@
 @property (strong,nonatomic) ScrollPageView *tmpVisibleBottomPageView;
 
 @property (strong,nonatomic,readonly) Class pageVCClass;
+
+@property (strong,nonatomic) ScrollPageView *tmpCallBackTopPageView;
+@property (strong,nonatomic) ScrollPageView *tmpCallBackBottomPageView;
+
 @end
 @implementation ScrollVerticalFlipView
 
@@ -59,7 +63,10 @@
         ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:self.bounds withPageVC:pageVC];
         [_scrollView addSubview:animationView];
         animationView.frame = (CGRect){0,0,_scrollView.frame.size};
-
+        _tmpCallBackBottomPageView = animationView;
+        [self pageVCBeginningWithNeedPageVC:pageVC withCurrentPageVC:nil];
+        [self pageVCDidFinishedWithNeedPageVC:pageVC withCurrentPageVC:nil withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self setupScrollOffset];
@@ -89,11 +96,20 @@
 //}
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    
+    
     if (scrollView.contentOffset.y > self.tmpOffset.y) {
         self.tmpOffset = scrollView.contentOffset;
 
         ///scroll up
         ScrollPageView *visiblePageView = [self getVisibleBottomPageView];
+        
+        if (self.tmpCallBackBottomPageView != visiblePageView) {
+            [self pageVCCallBackWithVisibleBottomPageView:visiblePageView withOldTmpPageView:self.tmpCallBackBottomPageView];
+            self.tmpCallBackBottomPageView = visiblePageView;
+        }
+        
         if (visiblePageView && self.tmpVisibleBottomPageView == visiblePageView) {
             return;
         }
@@ -110,6 +126,12 @@
 
         ///scroll down
         ScrollPageView *visiblePageView = [self getVisibleTopPageView];
+        
+        if (self.tmpCallBackTopPageView != visiblePageView) {
+            [self pageVCCallBackWithVisibleTopPageView:visiblePageView withOldTmpPageView:self.tmpCallBackTopPageView];
+            self.tmpCallBackTopPageView = visiblePageView;
+        }
+        
         if (visiblePageView && self.tmpVisibleTopPageView == visiblePageView) {
             return;
         }
@@ -146,7 +168,7 @@
         return;
     }
     
-    [self pageVCBeginningWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleTopPageView.pageVC];
+    [self pageVCBeginningWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:nil];
     
     if (topView == visibleTopPageView) {
         ///滑到顶部追加pageView
@@ -167,9 +189,6 @@
         [self.scrollView sendSubviewToBack:reusePageView];
         
     }
-    
-    [self pageVCDidFinishedWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleTopPageView.pageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
-    
 }
 
 -(void)loadBottomWithVisibleBottomPageView:(ScrollPageView*)visibleBottomPageView{
@@ -188,7 +207,7 @@
         return;
     }
     
-    [self pageVCBeginningWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleBottomPageView.pageVC];
+    [self pageVCBeginningWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:nil];
     if (bottomView == visibleBottomPageView) {
         ///滑到底部追加pageView
         reusePageView.frame = CGRectOffset(bottomView.frame, 0, CGRectGetHeight(bottomView.frame));
@@ -200,10 +219,28 @@
         self.scrollView.contentSize = (CGSize){self.scrollView.contentSize.width,self.scrollView.contentSize.height + CGRectGetHeight(bottomView.frame)};
     }
     
-    [self pageVCDidFinishedWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleBottomPageView.pageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
 }
 
 #pragma mark - pagevc animation
+
+-(void)pageVCCallBackWithVisibleBottomPageView:(ScrollPageView*)visibleBottomPageView withOldTmpPageView:(ScrollPageView*)oldPageView{
+    if (oldPageView) {
+        ScrollPageView *willBackView = [self getTopPageViewAtPageView:oldPageView];
+        ScrollPageView *willFrontView = visibleBottomPageView;
+        [self pageVCBeginningWithNeedPageVC:nil withCurrentPageVC:willBackView.pageVC];
+        [self pageVCDidFinishedWithNeedPageVC:willFrontView.pageVC withCurrentPageVC:willBackView.pageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+    }
+}
+
+-(void)pageVCCallBackWithVisibleTopPageView:(ScrollPageView*)visibleTopPageView withOldTmpPageView:(ScrollPageView*)oldPageView{
+    if (oldPageView) {
+        ScrollPageView *willBackView = [self getBottomPageViewUnderPageView:oldPageView];
+        ScrollPageView *willFrontView = visibleTopPageView;
+        [self pageVCBeginningWithNeedPageVC:nil withCurrentPageVC:willBackView.pageVC];
+        [self pageVCDidFinishedWithNeedPageVC:willFrontView.pageVC withCurrentPageVC:willBackView.pageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
+    }
+}
+
 -(void)pageVCBeginningWithNeedPageVC:(XXSYPageViewController*)needPageVC withCurrentPageVC:(XXSYPageViewController*)pageVC{
     [needPageVC animationTypeChanged:FlipAnimationType_scroll_V];
     [needPageVC flipAnimationStatusChanged:YES];
