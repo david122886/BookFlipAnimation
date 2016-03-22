@@ -23,7 +23,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:nil withDataSource:self withPageVCForClass:[PageViewController class]];
+    PageViewController *vc = [[PageViewController alloc] init];
+    vc.index = 0;
+    vc.view.backgroundColor = [UIColor greenColor];
+    
+    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:vc withDataSource:self withPageVCForClass:[PageViewController class]];
     [self.view addSubview:flipView];
     flipView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     

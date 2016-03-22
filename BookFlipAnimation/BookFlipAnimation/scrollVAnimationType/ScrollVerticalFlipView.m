@@ -30,14 +30,11 @@
 
 @interface ScrollVerticalFlipView()<UIScrollViewDelegate>
 @property (strong,nonatomic) UIScrollView *scrollView;
-@property (strong,nonatomic) XXSYPageViewController *pageVC;
-@property (assign,nonatomic) NSInteger needPageCount;
 @property (assign,nonatomic) BOOL forbiden;
 @property (assign,nonatomic) CGPoint tmpOffset;
 
 @property (strong,nonatomic) ScrollPageView *tmpVisibleTopPageView;
 @property (strong,nonatomic) ScrollPageView *tmpVisibleBottomPageView;
-@property (assign,nonatomic) CGPoint tmpPanVelocity;
 
 @property (strong,nonatomic,readonly) Class pageVCClass;
 @end
@@ -47,9 +44,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         _dataSource = dataSource;
-        _pageVC = pageVC;
-        _needPageCount = 100;
-        
         _pageVCClass = pageVCClass;
         
         _scrollView = [[UIScrollView alloc] initWithFrame:(CGRect){0,0,frame.size}];
@@ -59,70 +53,40 @@
         _scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
         _scrollView.delegate = self;
         _scrollView.contentSize = frame.size;
+        _scrollView.contentSize = (CGSize){CGRectGetWidth(_scrollView.frame),CGRectGetHeight(_scrollView.frame)+1};
         [self addSubview:_scrollView];
         
-        [self setupPageViewsWithCount:1];
-        
-        ///用在章节只有一页，且前后章节都需要付费时候
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-        [self addGestureRecognizer:pan];
+        ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:self.bounds withPageVC:pageVC];
+        [_scrollView addSubview:animationView];
+        animationView.frame = (CGRect){0,0,_scrollView.frame.size};
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setupScrollOffset];
+            });
+        });
     }
     return self;
 }
 
 
--(void)setupPageViewsWithCount:(NSInteger)count{
-    for (int index = 0; index < count; index++) {
-        ScrollPageView *sub = [self getReusePageView];
-        sub.frame = (CGRect){0,CGRectGetHeight(self.frame)*index,self.frame.size};
-        sub.backgroundColor = index%2 == 0?[UIColor greenColor]: [UIColor redColor];
-        sub.tag = index;
-        [self.scrollView addSubview:sub];
-    }
-    self.scrollView.contentSize = (CGSize){CGRectGetWidth(self.frame),CGRectGetHeight(self.frame)*count};
-}
-#pragma mark - panGesture
+-(void)setupScrollOffset{
+    _scrollView.contentOffset = (CGPoint){0,1};
 
-
--(void)panGesture:(UIPanGestureRecognizer*)panGesture{
-    if (panGesture.state == UIGestureRecognizerStateBegan) {
-        CGPoint point = [panGesture velocityInView:nil];
-        if (point.y > 0) {
-            ///scroll to top
-            [self loadTopWithVisibleTopPageView:[self getVisibleTopPageView]];
-        }else{
-            ///scroll to bottom
-            [self loadBottomWithVisibleBottomPageView:[self getVisibleBottomPageView]];
-        }
-        NSLog(@"panGesture:%@",NSStringFromCGPoint(point));
-    }
-//    self.scrollView.contentSize = (CGSize){CGRectGetWidth(self.frame),CGRectGetHeight(self.frame)+1};
 }
 
 #pragma mark - scroll View delegate
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    CGFloat y = [scrollView.panGestureRecognizer velocityInView:nil].y;
-//    NSLog(@"%f",y);
     self.tmpOffset = scrollView.contentOffset;
-    
 }
 
--(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-    NSLog(@"888888888888");
-}
+//-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+//}
 
--(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-//    NSLog(@"end drag,%f",velocity.y);
-    self.tmpPanVelocity = velocity;
-    if (ABS(velocity.y)  <= 0.001) {
-        
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-//    NSLog(@"scrollViewDidEndDecelerating");
-}
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+//    
+//}
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (scrollView.contentOffset.y > self.tmpOffset.y) {
@@ -176,16 +140,16 @@
         }
     }
 
-    
+    [reusePageView.pageVC clearAllPageData];
     XXSYPageViewController *needPageVC = [self.dataSource scrollVerticalView:self refreshBeforePageVCWithReusePageVC:reusePageView.pageVC withCurrentPageVC:visibleTopPageView.pageVC];
     if (!needPageVC) {
         return;
     }
     
+    [self pageVCBeginningWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleTopPageView.pageVC];
+    
     if (topView == visibleTopPageView) {
-        NSLog(@"loadTopWithVisibleTopPageView:%@",visibleTopPageView);
-        
-
+        ///滑到顶部追加pageView
         CGFloat height = CGRectGetHeight(topView.frame);
         if (CGRectGetMinY(topView.frame) <= height) {
             self.scrollView.contentSize = (CGSize){self.scrollView.contentSize.width,self.scrollView.contentSize.height + height};
@@ -203,7 +167,8 @@
         [self.scrollView sendSubviewToBack:reusePageView];
         
     }
-
+    
+    [self pageVCDidFinishedWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleTopPageView.pageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
     
 }
 
@@ -217,17 +182,15 @@
             reusePageView = [self getTopPageViewAtPageView:nil];
         }
     }
-    
+    [reusePageView.pageVC clearAllPageData];
     XXSYPageViewController *needPageVC = [self.dataSource scrollVerticalView:self refreshAfterPageVCWithReusePageVC:reusePageView.pageVC withCurrentPageVC:visibleBottomPageView.pageVC];
     if (!needPageVC) {
         return;
     }
     
+    [self pageVCBeginningWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleBottomPageView.pageVC];
     if (bottomView == visibleBottomPageView) {
-        NSLog(@"loadBottomWithVisibleBottomPageView:%@",visibleBottomPageView);
-        
-        
-        
+        ///滑到底部追加pageView
         reusePageView.frame = CGRectOffset(bottomView.frame, 0, CGRectGetHeight(bottomView.frame));
         if (![self.scrollView.subviews containsObject:reusePageView]) {
             [self.scrollView addSubview:reusePageView];
@@ -236,32 +199,34 @@
         
         self.scrollView.contentSize = (CGSize){self.scrollView.contentSize.width,self.scrollView.contentSize.height + CGRectGetHeight(bottomView.frame)};
     }
+    
+    [self pageVCDidFinishedWithNeedPageVC:reusePageView.pageVC withCurrentPageVC:visibleBottomPageView.pageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
 }
 
-//-(void)loadBottomWithVisibleBottomPageView:(ScrollPageView*)visibleBottomPageView{
-//    ScrollPageView *bottomView = [self getBottomPageViewUnderPageView:nil];
-//    if (bottomView == visibleBottomPageView) {
-//        NSLog(@"loadBottomWithVisibleBottomPageView:%@",visibleBottomPageView);
-//
-//        ScrollPageView *reusePageView = nil;
-//        if ([self getPageViewCount] < kCachePageCount) {
-//            reusePageView = [self getReusePageView];
-//        }else{
-//            reusePageView = [self getTopPageViewAtPageView:nil];
-//        }
-//        
-//        reusePageView.frame = CGRectOffset(bottomView.frame, 0, CGRectGetHeight(bottomView.frame));
-//        if (![self.scrollView.subviews containsObject:reusePageView]) {
-//            [self.scrollView addSubview:reusePageView];
-//        }
-//        [self.scrollView bringSubviewToFront:reusePageView];
-//        
-//        self.scrollView.contentSize = (CGSize){self.scrollView.contentSize.width,self.scrollView.contentSize.height + CGRectGetHeight(bottomView.frame)};
-//    }
-//    
-//    
-//    
-//}
+#pragma mark - pagevc animation
+-(void)pageVCBeginningWithNeedPageVC:(XXSYPageViewController*)needPageVC withCurrentPageVC:(XXSYPageViewController*)pageVC{
+    [needPageVC animationTypeChanged:FlipAnimationType_scroll_V];
+    [needPageVC flipAnimationStatusChanged:YES];
+    [needPageVC currentPageVCChanged:YES];
+    [needPageVC willMoveToFront];
+    
+    [pageVC willMoveToBack];
+    [pageVC currentPageVCChanged:NO];
+    [pageVC animationTypeChanged:FlipAnimationType_scroll_V];
+    [pageVC flipAnimationStatusChanged:YES];
+}
+
+
+-(void)pageVCDidFinishedWithNeedPageVC:(XXSYPageViewController*)needPageVC withCurrentPageVC:(XXSYPageViewController*)pageVC withAnimationDirection:(FlipAnimationDirection)direction{
+    
+    [needPageVC currentPageVCChanged:YES];
+    [needPageVC flipAnimationStatusChanged:NO];
+    [needPageVC didMoveToFrontWithDirection:direction];
+    
+    [pageVC currentPageVCChanged:NO];
+    [pageVC flipAnimationStatusChanged:NO];
+    [pageVC didMoveToBackWithDirection:direction];
+}
 
 #pragma mark - scrollView helpers
 -(ScrollPageView*)subPageViewAtOffset:(CGPoint)offset{
@@ -387,5 +352,9 @@
     ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:self.bounds withPageVC:[[self.pageVCClass alloc] init]];
     
     return animationView;
+}
+
+-(BOOL)isFlipAnimating{
+    return self.scrollView.isDecelerating| self.scrollView.isDragging;
 }
 @end

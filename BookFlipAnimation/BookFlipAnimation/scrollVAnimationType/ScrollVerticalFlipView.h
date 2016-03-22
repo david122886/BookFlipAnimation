@@ -21,6 +21,7 @@
  */
 @interface ScrollVerticalFlipView : UIView
 @property (weak,nonatomic) id<ScrollVerticalFlipViewDataSource> dataSource;
+@property (assign,nonatomic) BOOL isFlipAnimating;
 -(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC withDataSource:(id<ScrollVerticalFlipViewDataSource>)dataSource withPageVCForClass:(Class)pageVCClass;
 
 @end
