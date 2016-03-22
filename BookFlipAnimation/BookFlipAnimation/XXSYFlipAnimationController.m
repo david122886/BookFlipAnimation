@@ -12,7 +12,7 @@
 #import "XXSYFlipAnimationController.h"
 #import "XXSYPageViewController.h"
 #import "PageAnimationView.h"
-
+#import "ScrollVerticalFlipView.h"
 
 typedef BOOL (^XXSYFlipGestureShouldRecognizeTouchBlock)(XXSYFlipAnimationController * drawerController, UIGestureRecognizer * gesture, UITouch * touch);
 typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * drawerController, UIGestureRecognizer * gesture);
@@ -25,7 +25,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 #pragma mark -
 
 
-@interface XXSYFlipAnimationController ()<UIGestureRecognizerDelegate,UIPageViewControllerDataSource,UIPageViewControllerDelegate>
+@interface XXSYFlipAnimationController ()<UIGestureRecognizerDelegate,UIPageViewControllerDataSource,UIPageViewControllerDelegate,ScrollVerticalFlipViewDataSource,ScrollVerticalFlipViewDelegate>
 @property (strong,nonatomic) XXSYFlipGestureShouldRecognizeTouchBlock gestureShouldRecognizeTouch;
 @property (strong,nonatomic) XXSYFlipGestureCompletionBlock gestureCompletion;
 @property (strong,nonatomic) VisualCustomAnimationBlock visualCustomAnimationBlock;
@@ -62,6 +62,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 @property (strong,nonatomic) XXSYPageViewController *tmpCurrentPageVC;
 @property (strong,nonatomic) XXSYPageViewController *tmpBackPageVC;
 
+@property (strong,nonatomic) ScrollVerticalFlipView *scrollVFlipView;
 @end
 
 @implementation XXSYFlipAnimationController
@@ -161,6 +162,13 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 -(void)setupInitPageViewControllerForScroll_V:(XXSYPageViewController*)pageVC{
     [self.panGesture setEnabled:NO];
+    if (self.scrollVFlipView) {
+        return;
+    }
+    
+    self.scrollVFlipView = [[ScrollVerticalFlipView alloc] initWithFrame:[[UIScreen mainScreen] bounds] withPageVC:pageVC withDataSource:self withPageVCForClass:self.currentPageVCClass];
+    self.scrollVFlipView.delegate = self;
+    
 }
 
 #pragma mark - helpers
@@ -1070,6 +1078,31 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     self.tmpNeedPageVC = nil;
     self.tmpCurrentPageVC = nil;
     self.tmpBackPageVC = nil;
+}
+
+#pragma mark - 垂直拖动翻页
+#pragma mark - ScrollVerticalFlipViewDataSource
+-(XXSYPageViewController*)scrollVerticalView:(ScrollVerticalFlipView*)scrollView refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
+    if (![self.childViewControllers containsObject:reusePageVC]) {
+        [reusePageVC willMoveToParentViewController:self];
+        [self addChildViewController:reusePageVC];
+        [reusePageVC didMoveToParentViewController:self];
+    }
+    return [self.dataSource flipAnimationController:self refreshBeforePageVCWithReusePageVC:reusePageVC withCurrentPageVC:currentPageVC];
+}
+
+-(XXSYPageViewController*)scrollVerticalView:(ScrollVerticalFlipView*)scrollView refreshAfterPageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
+    if (![self.childViewControllers containsObject:reusePageVC]) {
+        [reusePageVC willMoveToParentViewController:self];
+        [self addChildViewController:reusePageVC];
+        [reusePageVC didMoveToParentViewController:self];
+    }
+    return [self.dataSource flipAnimationController:self refreshAfterPageVCWithReusePageVC:reusePageVC withCurrentPageVC:currentPageVC];
+}
+
+#pragma mark - ScrollVerticalFlipViewDelegate
+-(void)scrollVerticalView:(ScrollVerticalFlipView *)scrollView refreshScrollHeader:(UIView *)header andRefreshScrollFooter:(UIView *)footer withCurrentPageVC:(XXSYPageViewController *)currentPageVC{
+    
 }
 
 #pragma mark - setter

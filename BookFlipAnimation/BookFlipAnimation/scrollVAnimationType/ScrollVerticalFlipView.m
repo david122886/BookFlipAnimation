@@ -8,6 +8,7 @@
 
 #import "ScrollVerticalFlipView.h"
 #define kCachePageCount 5
+
 @interface ScrollPageView:UIView
 @property (strong,nonatomic,readonly) XXSYPageViewController *pageVC;
 -(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC;
@@ -41,6 +42,9 @@
 @property (strong,nonatomic) ScrollPageView *tmpCallBackTopPageView;
 @property (strong,nonatomic) ScrollPageView *tmpCallBackBottomPageView;
 
+@property (strong,nonatomic) UIView *scrollHeader;
+@property (strong,nonatomic) UIView *scrollFooter;
+
 @end
 @implementation ScrollVerticalFlipView
 
@@ -50,7 +54,7 @@
         _dataSource = dataSource;
         _pageVCClass = pageVCClass;
         
-        _scrollView = [[UIScrollView alloc] initWithFrame:(CGRect){0,0,frame.size}];
+        _scrollView = [[UIScrollView alloc] initWithFrame:(CGRect){0,kPageHeaderHeight,CGRectGetWidth(frame),CGRectGetHeight(frame)-kPageHeaderHeight*2}];
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _scrollView.bounces = NO;
         _scrollView.pagingEnabled = NO;
@@ -60,9 +64,9 @@
         _scrollView.contentSize = (CGSize){CGRectGetWidth(_scrollView.frame),CGRectGetHeight(_scrollView.frame)+1};
         [self addSubview:_scrollView];
         
-        ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:self.bounds withPageVC:pageVC];
+        ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:(CGRect){0,0,_scrollView.frame.size} withPageVC:pageVC];
         [_scrollView addSubview:animationView];
-        animationView.frame = (CGRect){0,0,_scrollView.frame.size};
+        
         _tmpCallBackBottomPageView = animationView;
         [self pageVCBeginningWithNeedPageVC:pageVC withCurrentPageVC:nil];
         [self pageVCDidFinishedWithNeedPageVC:pageVC withCurrentPageVC:nil withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
@@ -76,10 +80,37 @@
     return self;
 }
 
+-(void)registerScrollHeader:(Class)headerClass{
+    if (_scrollHeader) {
+        return;
+    }
+    _scrollHeader = headerClass?[[headerClass alloc] init]:[[UIView alloc] init];
+    _scrollHeader.frame = (CGRect){0,0,CGRectGetWidth(self.frame),kPageHeaderHeight};
+    _scrollHeader.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self addSubview:_scrollHeader];
+    
+    self.scrollHeader.backgroundColor = [UIColor purpleColor];
+}
+
+-(void)registerScrollFooter:(Class)footerClass{
+    if (_scrollFooter) {
+        return;
+    }
+    _scrollFooter = footerClass?[[footerClass alloc] init]:[[UIView alloc] init];
+    _scrollFooter.frame = (CGRect){0,CGRectGetHeight(self.frame)-kPageHeaderHeight,CGRectGetWidth(self.frame),kPageHeaderHeight};
+    _scrollHeader.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self addSubview:_scrollFooter];
+    self.scrollFooter.backgroundColor = [UIColor blueColor];
+}
+
 
 -(void)setupScrollOffset{
     _scrollView.contentOffset = (CGPoint){0,1};
-
+    
+    ScrollPageView *oldPageView = [self getVisibleTopPageView];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollVerticalView:refreshScrollHeader:andRefreshScrollFooter:withCurrentPageVC:)]) {
+        [self.delegate scrollVerticalView:self refreshScrollHeader:self.scrollHeader andRefreshScrollFooter:self.scrollFooter withCurrentPageVC:oldPageView.pageVC];
+    }
 }
 
 #pragma mark - scroll View delegate
@@ -229,7 +260,13 @@
         ScrollPageView *willFrontView = visibleBottomPageView;
         [self pageVCBeginningWithNeedPageVC:nil withCurrentPageVC:willBackView.pageVC];
         [self pageVCDidFinishedWithNeedPageVC:willFrontView.pageVC withCurrentPageVC:willBackView.pageVC withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+        
     }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollVerticalView:refreshScrollHeader:andRefreshScrollFooter:withCurrentPageVC:)]) {
+        [self.delegate scrollVerticalView:self refreshScrollHeader:self.scrollHeader andRefreshScrollFooter:self.scrollFooter withCurrentPageVC:oldPageView.pageVC];
+    }
+    
 }
 
 -(void)pageVCCallBackWithVisibleTopPageView:(ScrollPageView*)visibleTopPageView withOldTmpPageView:(ScrollPageView*)oldPageView{
@@ -238,6 +275,10 @@
         ScrollPageView *willFrontView = visibleTopPageView;
         [self pageVCBeginningWithNeedPageVC:nil withCurrentPageVC:willBackView.pageVC];
         [self pageVCDidFinishedWithNeedPageVC:willFrontView.pageVC withCurrentPageVC:willBackView.pageVC withAnimationDirection:FlipAnimationDirection_FromRightToLeft];
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(scrollVerticalView:refreshScrollHeader:andRefreshScrollFooter:withCurrentPageVC:)]) {
+            [self.delegate scrollVerticalView:self refreshScrollHeader:self.scrollHeader andRefreshScrollFooter:self.scrollFooter withCurrentPageVC:oldPageView.pageVC];
+        }
     }
 }
 
@@ -263,6 +304,15 @@
     [pageVC currentPageVCChanged:NO];
     [pageVC flipAnimationStatusChanged:NO];
     [pageVC didMoveToBackWithDirection:direction];
+}
+
+-(NSArray*)getAllPageVCs{
+    NSArray *allPageViews = [self getAllPageViews];
+    NSMutableArray *pageVCs = @[].mutableCopy;
+    for (ScrollPageView *sub in allPageViews) {
+        [pageVCs addObject:sub.pageVC];
+    }
+    return pageVCs;
 }
 
 #pragma mark - scrollView helpers

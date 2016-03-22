@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/scrollVAnimationType/ScrollVerticalFlipView.m"
-            timestampString = "480320793.714609"
+            timestampString = "480330508.607273"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "-loadTopWithVisibleTopPageView:"
             landmarkType = "5">
          </BreakpointContent>

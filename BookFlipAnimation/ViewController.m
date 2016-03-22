@@ -13,8 +13,9 @@
 #import "PageViewController.h"
 
 #import "ScrollVerticalFlipView.h"
+#import "PageHeaderAndFooter.h"
 
-@interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource,ScrollVerticalFlipViewDataSource>
+@interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource,ScrollVerticalFlipViewDataSource,ScrollVerticalFlipViewDelegate>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
 
 @end
@@ -30,6 +31,9 @@
     ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:vc withDataSource:self withPageVCForClass:[PageViewController class]];
     [self.view addSubview:flipView];
     flipView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    flipView.delegate = self;
+    [flipView registerScrollHeader:[PageHeaderAndFooter class]];
+    [flipView registerScrollFooter:[PageHeaderAndFooter class]];
     
     return;
     
@@ -192,5 +196,17 @@
     reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
     return reusePageVC;
 }
+
+#pragma mark - ScrollVerticalFlipViewDelegate
+-(void)scrollVerticalView:(ScrollVerticalFlipView *)scrollView refreshScrollHeader:(UIView *)header andRefreshScrollFooter:(UIView *)footer withCurrentPageVC:(XXSYPageViewController *)currentPageVC{
+    PageHeaderAndFooter *headerView = (PageHeaderAndFooter*)header;
+    PageHeaderAndFooter *footerView = (PageHeaderAndFooter*)footer;
+    PageViewController *vc = (PageViewController*)currentPageVC;
+    
+    [headerView drawString:[NSString stringWithFormat:@"%ld",vc.index]];
+    [footerView drawString:[NSString stringWithFormat:@"%ld",vc.index]];
+
+}
+
 
 @end

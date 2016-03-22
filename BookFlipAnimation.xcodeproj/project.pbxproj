@@ -27,6 +27,7 @@
 		66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA19C31C86E91A0096BC40 /* ReadDataProperty.m */; };
 		EB0CE6331C9BD31700702712 /* ScrollVerticalFlipView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0CE6321C9BD31700702712 /* ScrollVerticalFlipView.m */; };
 		EB7270251C901A1F00451EF6 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7270241C901A1F00451EF6 /* PageViewController.m */; };
+		EB9221741CA13BAF00CC03E6 /* PageHeaderAndFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9221731CA13BAF00CC03E6 /* PageHeaderAndFooter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,8 @@
 		EB0CE6321C9BD31700702712 /* ScrollVerticalFlipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollVerticalFlipView.m; sourceTree = "<group>"; };
 		EB7270231C901A1F00451EF6 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
 		EB7270241C901A1F00451EF6 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
+		EB9221721CA13BAF00CC03E6 /* PageHeaderAndFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageHeaderAndFooter.h; sourceTree = "<group>"; };
+		EB9221731CA13BAF00CC03E6 /* PageHeaderAndFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageHeaderAndFooter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +178,8 @@
 			children = (
 				EB0CE6311C9BD31700702712 /* ScrollVerticalFlipView.h */,
 				EB0CE6321C9BD31700702712 /* ScrollVerticalFlipView.m */,
+				EB9221721CA13BAF00CC03E6 /* PageHeaderAndFooter.h */,
+				EB9221731CA13BAF00CC03E6 /* PageHeaderAndFooter.m */,
 			);
 			path = scrollVAnimationType;
 			sourceTree = "<group>";
@@ -251,6 +256,7 @@
 			files = (
 				EB0CE6331C9BD31700702712 /* ScrollVerticalFlipView.m in Sources */,
 				66FA19A31C86887E0096BC40 /* ViewController.m in Sources */,
+				EB9221741CA13BAF00CC03E6 /* PageHeaderAndFooter.m in Sources */,
 				66FA19C41C86E91A0096BC40 /* ReadDataProperty.m in Sources */,
 				66FA19BB1C869BA20096BC40 /* XXSYFlipAnimationController.m in Sources */,
 				660B50E11C87EC81000E0BF1 /* ChapterNode.m in Sources */,
