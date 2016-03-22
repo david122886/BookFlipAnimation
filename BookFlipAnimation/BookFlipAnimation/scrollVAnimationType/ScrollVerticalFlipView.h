@@ -30,11 +30,16 @@
 @interface ScrollVerticalFlipView : UIView
 @property (weak,nonatomic) id<ScrollVerticalFlipViewDataSource> dataSource;
 @property (weak,nonatomic) id<ScrollVerticalFlipViewDelegate> delegate;
-@property (assign,nonatomic) BOOL isFlipAnimating;
+
+@property (strong,nonatomic,readonly) UIView *scrollHeader;
+@property (strong,nonatomic,readonly) UIView *scrollFooter;
+
+
 -(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC withDataSource:(id<ScrollVerticalFlipViewDataSource>)dataSource withPageVCForClass:(Class)pageVCClass;
 
 -(void)registerScrollHeader:(Class)headerClass;
 -(void)registerScrollFooter:(Class)footerClass;
 
+-(BOOL)isFlipAnimating;
 -(NSArray*)getAllPageVCs;
 @end

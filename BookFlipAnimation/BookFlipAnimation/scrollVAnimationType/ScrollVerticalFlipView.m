@@ -42,9 +42,6 @@
 @property (strong,nonatomic) ScrollPageView *tmpCallBackTopPageView;
 @property (strong,nonatomic) ScrollPageView *tmpCallBackBottomPageView;
 
-@property (strong,nonatomic) UIView *scrollHeader;
-@property (strong,nonatomic) UIView *scrollFooter;
-
 @end
 @implementation ScrollVerticalFlipView
 

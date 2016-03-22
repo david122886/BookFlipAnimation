@@ -31,10 +31,16 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 @property (strong,nonatomic) VisualCustomAnimationBlock visualCustomAnimationBlock;
 @property (strong,nonatomic) CustomAnimationStatusBlock customAnimationBeginStatusBlock;
 @property (strong,nonatomic) CustomAnimationStatusBlock customAnimationFinishedStatusBlock;
+
+@property (assign,nonatomic) BOOL isFlipAnimating;
+
 ///缓存PageAnimationView，实现重复使用,index = 0表示最上面
 @property (strong,nonatomic) NSMutableArray *reusePageAnimationViewArray;
 
 @property (strong,nonatomic) Class currentPageVCClass;
+@property (strong,nonatomic) Class scrollHeaderClass;
+@property (strong,nonatomic) Class scrollFooterClass;
+
 #pragma mark - pan gesture
 @property (nonatomic, assign) CGPoint startPanPoint;
 @property (nonatomic, assign) CGPoint movePanPoint;
@@ -92,6 +98,14 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 #pragma mark -
 -(void)registerPageVCForClass:(Class)pageVCClass{
     _currentPageVCClass = pageVCClass;
+}
+
+-(void)registerScrollHeader:(Class)scrollHeader{
+    _scrollHeaderClass = scrollHeader;
+}
+
+-(void)registerScrollFooter:(Class)scrollFooter{
+    _scrollFooterClass = scrollFooter;
 }
 
 -(NSArray*)childenPageControllers{
@@ -168,7 +182,11 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     
     self.scrollVFlipView = [[ScrollVerticalFlipView alloc] initWithFrame:[[UIScreen mainScreen] bounds] withPageVC:pageVC withDataSource:self withPageVCForClass:self.currentPageVCClass];
     self.scrollVFlipView.delegate = self;
+    [self.scrollVFlipView registerScrollFooter:self.scrollFooterClass];
+    [self.scrollVFlipView registerScrollHeader:self.scrollHeaderClass];
     
+    [self.view addSubview:self.scrollVFlipView];
+    self.scrollVFlipView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
 }
 
 #pragma mark - helpers
@@ -1102,7 +1120,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - ScrollVerticalFlipViewDelegate
 -(void)scrollVerticalView:(ScrollVerticalFlipView *)scrollView refreshScrollHeader:(UIView *)header andRefreshScrollFooter:(UIView *)footer withCurrentPageVC:(XXSYPageViewController *)currentPageVC{
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(flipAnimationController:refreshScrollHeader:andRefreshScrollFooter:withCurrentPageVC:)]) {
+        [self.delegate flipAnimationController:self refreshScrollHeader:header andRefreshScrollFooter:footer withCurrentPageVC:currentPageVC];
+    }
 }
 
 #pragma mark - setter
@@ -1139,6 +1159,13 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     _customAnimationBeginStatusBlock = animationBeginStatus;
     _customAnimationFinishedStatusBlock = animationFinishedStatus;
 }
+
+-(BOOL)isAnimating{
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        return self.scrollVFlipView.isFlipAnimating;
+    }
+    return _isFlipAnimating;
+}
 #pragma mark - property
 -(NSMutableArray *)reusePageAnimationViewArray{
     if (!_reusePageAnimationViewArray) {
@@ -1154,4 +1181,5 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     }
     return _reuseCacheCount;
 }
+
 @end

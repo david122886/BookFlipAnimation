@@ -24,22 +24,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    PageViewController *vc = [[PageViewController alloc] init];
-    vc.index = 0;
-    vc.view.backgroundColor = [UIColor greenColor];
-    
-    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:vc withDataSource:self withPageVCForClass:[PageViewController class]];
-    [self.view addSubview:flipView];
-    flipView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    flipView.delegate = self;
-    [flipView registerScrollHeader:[PageHeaderAndFooter class]];
-    [flipView registerScrollFooter:[PageHeaderAndFooter class]];
-    
-    return;
+//    PageViewController *vc = [[PageViewController alloc] init];
+//    vc.index = 0;
+//    vc.view.backgroundColor = [UIColor greenColor];
+//    
+//    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:vc withDataSource:self withPageVCForClass:[PageViewController class]];
+//    [self.view addSubview:flipView];
+//    flipView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+//    flipView.delegate = self;
+//    [flipView registerScrollHeader:[PageHeaderAndFooter class]];
+//    [flipView registerScrollFooter:[PageHeaderAndFooter class]];
+//    
+//    return;
     
     
     _animationController = [[XXSYFlipAnimationController alloc] init];
     [self.animationController registerPageVCForClass:[PageViewController class]];
+    [self.animationController registerScrollHeader:[PageHeaderAndFooter class]];
+    [self.animationController registerScrollFooter:[PageHeaderAndFooter class]];
+
     self.animationController.delegate = self;
     self.animationController.dataSource = self;
     
@@ -111,7 +114,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_curl];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll_V];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -156,6 +159,15 @@
     
 }
 
+-(void)flipAnimationController:(XXSYFlipAnimationController *)animationController refreshScrollHeader:(UIView *)header andRefreshScrollFooter:(UIView *)footer withCurrentPageVC:(XXSYPageViewController *)currentPageVC{
+    PageHeaderAndFooter *headerView = (PageHeaderAndFooter*)header;
+    PageHeaderAndFooter *footerView = (PageHeaderAndFooter*)footer;
+    PageViewController *vc = (PageViewController*)currentPageVC;
+    
+    [headerView drawString:[NSString stringWithFormat:@"%ld",vc.index]];
+    [footerView drawString:[NSString stringWithFormat:@"%ld",vc.index]];
+    
+}
 
 #pragma mark - auto read
 - (IBAction)start:(id)sender {
