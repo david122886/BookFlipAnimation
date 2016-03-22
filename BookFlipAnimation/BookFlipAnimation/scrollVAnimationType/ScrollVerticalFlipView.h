@@ -8,9 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "XXSYPageViewController.h"
+@class ScrollVerticalFlipView;
+
+@protocol ScrollVerticalFlipViewDataSource<NSObject>
+-(XXSYPageViewController*)scrollVerticalView:(ScrollVerticalFlipView*)scrollView refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC;
+
+-(XXSYPageViewController*)scrollVerticalView:(ScrollVerticalFlipView*)scrollView refreshAfterPageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC;
+
+@end
 /**
  * 上下拖动翻页效果
  */
 @interface ScrollVerticalFlipView : UIView
--(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC;
+@property (weak,nonatomic) id<ScrollVerticalFlipViewDataSource> dataSource;
+-(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC withDataSource:(id<ScrollVerticalFlipViewDataSource>)dataSource;
 @end

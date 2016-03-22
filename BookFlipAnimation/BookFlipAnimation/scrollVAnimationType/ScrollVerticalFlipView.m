@@ -7,6 +7,7 @@
 //
 
 #import "ScrollVerticalFlipView.h"
+#define kCachePageCount 5
 @interface ScrollPageView:UIView
 @property (strong,nonatomic,readonly) XXSYPageViewController *pageVC;
 -(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC;
@@ -41,9 +42,10 @@
 @end
 @implementation ScrollVerticalFlipView
 
--(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC{
+-(instancetype)initWithFrame:(CGRect)frame withPageVC:(XXSYPageViewController*)pageVC withDataSource:(id<ScrollVerticalFlipViewDataSource>)dataSource{
     self = [super initWithFrame:frame];
     if (self) {
+        _dataSource = dataSource;
         _pageVC = pageVC;
         _needPageCount = 100;
         
@@ -84,10 +86,10 @@
         CGPoint point = [panGesture velocityInView:nil];
         if (point.y > 0) {
             ///scroll to top
-            [self loadTopWithNeedPageView:[self getVisibleTopPageView]];
+            [self loadTopWithVisibleTopPageView:[self getVisibleTopPageView]];
         }else{
             ///scroll to bottom
-            [self loadBottomWithNeedPageView:[self getVisibleBottomPageView]];
+            [self loadBottomWithVisibleBottomPageView:[self getVisibleBottomPageView]];
         }
         NSLog(@"panGesture:%@",NSStringFromCGPoint(point));
     }
@@ -131,7 +133,7 @@
         if (CGRectGetMinY(visiblePageView.frame) < scrollView.contentOffset.y + CGRectGetHeight(scrollView.frame)/2) {
             self.tmpVisibleBottomPageView = visiblePageView;
             ///处理之后页需求
-            [self loadBottomWithNeedPageView:visiblePageView];
+            [self loadBottomWithVisibleBottomPageView:visiblePageView];
         }
         return;
     }
@@ -148,7 +150,7 @@
         if (CGRectGetMaxY(visiblePageView.frame) > scrollView.contentOffset.y + CGRectGetHeight(scrollView.frame)/2) {
             self.tmpVisibleTopPageView = visiblePageView;
             ///处理之前页需求
-            [self loadTopWithNeedPageView:visiblePageView];
+            [self loadTopWithVisibleTopPageView:visiblePageView];
         }
         
         return;
@@ -160,12 +162,60 @@
 
 #pragma mark - pageView helpers
 
--(void)loadTopWithNeedPageView:(ScrollPageView*)pageView{
-    NSLog(@"loadTopWithNeedPageView:%@",pageView);
+-(void)loadTopWithVisibleTopPageView:(ScrollPageView*)visibleTopPageView{
+    ScrollPageView *topView = [self getTopPageViewAtPageView:nil];
+    if (topView == visibleTopPageView) {
+        NSLog(@"loadTopWithVisibleTopPageView:%@",visibleTopPageView);
+        
+        ScrollPageView *reusePageView = nil;
+        if ([self getPageViewCount] < kCachePageCount) {
+            reusePageView = [self getReusePageView];
+        }else{
+            reusePageView = [self getBottomPageViewUnderPageView:nil];
+        }
+        CGFloat height = CGRectGetHeight(topView.frame);
+        if (CGRectGetMinY(topView.frame) <= height) {
+            self.scrollView.contentSize = (CGSize){self.scrollView.contentSize.width,self.scrollView.contentSize.height + height};
+            NSArray *allPages = [self getAllPageViews];
+            for (ScrollPageView *pageView in allPages) {
+                pageView.frame = CGRectOffset(pageView.frame, 0, height);
+            }
+            self.scrollView.contentOffset = (CGPoint){self.scrollView.contentOffset.x,self.scrollView.contentOffset.y + height};
+        }
+        
+        reusePageView.frame = CGRectOffset(topView.frame, 0, -height);
+        if (![self.scrollView.subviews containsObject:reusePageView]) {
+            [self.scrollView addSubview:reusePageView];
+        }
+        [self.scrollView sendSubviewToBack:reusePageView];
+        
+    }
+
 }
 
--(void)loadBottomWithNeedPageView:(ScrollPageView*)pageView{
-    NSLog(@"loadBottomWithNeedPageView:%@",pageView);
+-(void)loadBottomWithVisibleBottomPageView:(ScrollPageView*)visibleBottomPageView{
+    ScrollPageView *bottomView = [self getBottomPageViewUnderPageView:nil];
+    if (bottomView == visibleBottomPageView) {
+        NSLog(@"loadBottomWithVisibleBottomPageView:%@",visibleBottomPageView);
+
+        ScrollPageView *reusePageView = nil;
+        if ([self getPageViewCount] < kCachePageCount) {
+            reusePageView = [self getReusePageView];
+        }else{
+            reusePageView = [self getTopPageViewAtPageView:nil];
+        }
+        
+        reusePageView.frame = CGRectOffset(bottomView.frame, 0, CGRectGetHeight(bottomView.frame));
+        if (![self.scrollView.subviews containsObject:reusePageView]) {
+            [self.scrollView addSubview:reusePageView];
+        }
+        [self.scrollView bringSubviewToFront:reusePageView];
+        
+        self.scrollView.contentSize = (CGSize){self.scrollView.contentSize.width,self.scrollView.contentSize.height + CGRectGetHeight(bottomView.frame)};
+    }
+    
+    
+    
 }
 
 #pragma mark - scrollView helpers
@@ -180,14 +230,19 @@
     return needView;
 }
 
--(NSInteger)getPageViewCount{
-    NSInteger count = 0;
-    for (UIView *sub in self.scrollView.subviews) {
+-(NSArray*)getAllPageViews{
+    NSMutableArray *pages = @[].mutableCopy;
+    NSArray *allSubs = self.scrollView.subviews;
+    for (UIView *sub in allSubs) {
         if ([sub isKindOfClass:[ScrollPageView class]]) {
-            count++;
+            [pages addObject:sub];
         }
     }
-    return count;
+    return pages;
+}
+
+-(NSInteger)getPageViewCount{
+    return [self getAllPageViews].count;
 }
 
 -(ScrollPageView*)getVisibleTopPageView{
@@ -207,6 +262,8 @@
     return nil;
 }
 
+
+
 -(ScrollPageView*)getVisibleBottomPageView{
     NSArray *pageViews = [self visiblePageViews];
     if (pageViews.count > 1) {
@@ -223,6 +280,48 @@
     
     return nil;
 }
+
+-(ScrollPageView*)getTopPageViewAtPageView:(ScrollPageView*)currentPageView{
+    NSArray *allSubViews = self.scrollView.subviews;
+
+    if (!currentPageView) {
+        for (UIView *sub in allSubViews) {
+            if ([sub isKindOfClass:[ScrollPageView class]]) {
+                return (ScrollPageView*)sub;
+            }
+        }
+    }
+    
+    for (NSInteger index = allSubViews.count-1; index >= 0; index--) {
+        UIView *sub = allSubViews[index];
+        if ([sub isKindOfClass:[ScrollPageView class]] && CGRectGetMinY(sub.frame) < CGRectGetMinY(currentPageView.frame)) {
+            return (ScrollPageView*)sub;
+        }
+    }
+
+    return nil;
+}
+
+-(ScrollPageView*)getBottomPageViewUnderPageView:(ScrollPageView*)currentPageView{
+    NSArray *allSubViews = self.scrollView.subviews;
+    if (!currentPageView) {
+        for (NSInteger index = allSubViews.count-1; index >= 0; index--) {
+            UIView *sub = allSubViews[index];
+            if ([sub isKindOfClass:[ScrollPageView class]]) {
+                return (ScrollPageView*)sub;
+            }
+        }
+    }
+    for (NSInteger index = 0; index < allSubViews.count; index++) {
+        UIView *sub = allSubViews[index];
+        if ([sub isKindOfClass:[ScrollPageView class]] && CGRectGetMinY(sub.frame) > CGRectGetMinY(currentPageView.frame)) {
+            return (ScrollPageView*)sub;
+        }
+    }
+    
+    return nil;
+}
+
 
 -(NSArray*)visiblePageViews{
     NSMutableArray *pageViews = @[].mutableCopy;

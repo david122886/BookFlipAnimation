@@ -14,7 +14,7 @@
 
 #import "ScrollVerticalFlipView.h"
 
-@interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource>
+@interface ViewController ()<XXSYFlipAnimationControllerDelegate,XXSYFlipAnimationControllerDataSource,ScrollVerticalFlipViewDataSource>
 @property (strong,nonatomic) XXSYFlipAnimationController *animationController;
 
 @end
@@ -23,7 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:nil];
+    ScrollVerticalFlipView *flipView = [[ScrollVerticalFlipView alloc] initWithFrame:self.view.bounds withPageVC:nil withDataSource:self];
     [self.view addSubview:flipView];
     flipView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
@@ -147,6 +147,8 @@
 -(void)flipAnimationController:(XXSYFlipAnimationController*)animationController FlipFinishedHasAnimation:(BOOL)animation transitionCompleted:(BOOL)completed{
     
 }
+
+
 #pragma mark - auto read
 - (IBAction)start:(id)sender {
     [self.animationController startAutoReadWithSpeed:30];
@@ -168,4 +170,23 @@
 - (IBAction)speedAdd:(id)sender {
     [self.animationController setupSpeed:60];
 }
+
+
+
+#pragma mark - ScrollVerticalFlipViewDataSource
+-(XXSYPageViewController *)scrollVerticalView:(ScrollVerticalFlipView *)scrollView refreshAfterPageVCWithReusePageVC:(XXSYPageViewController *)reusePageVC withCurrentPageVC:(XXSYPageViewController *)currentPageVC{
+    NSInteger index = [(PageViewController*)currentPageVC index];
+    reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
+    [(PageViewController*)reusePageVC setIndex:index+1];
+    return reusePageVC;
+    
+}
+
+-(XXSYPageViewController *)scrollVerticalView:(ScrollVerticalFlipView *)scrollView refreshBeforePageVCWithReusePageVC:(XXSYPageViewController *)reusePageVC withCurrentPageVC:(XXSYPageViewController *)currentPageVC{
+    NSInteger index = [(PageViewController*)currentPageVC index];
+    [(PageViewController*)reusePageVC setIndex:index-1];
+    reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
+    return reusePageVC;
+}
+
 @end
