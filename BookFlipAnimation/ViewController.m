@@ -93,7 +93,7 @@
         if (block) {
             block(animationController,allAnimationViewsStack,originDirection,finalDirection,currentViewOriginRect,translatePoint);
         }
-        NSLog(@"animating");
+//        NSLog(@"animating");
     } withAnimationBeginStatusBlock:^(XXSYFlipAnimationController *animationController,NSMutableArray *allAnimationViewsStack,PageAnimationView *reuseView,PageAnimationView *currentView,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection) {
         CustomAnimationStatusBlock block = [FlipBookAnimationManager visualBeginCustomAnimationBlockWithFlipAnimationType:animationController.animationType];
         if (block) {

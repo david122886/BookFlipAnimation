@@ -31,7 +31,6 @@
 
 @interface ScrollVerticalFlipView()<UIScrollViewDelegate>
 @property (strong,nonatomic) UIScrollView *scrollView;
-@property (assign,nonatomic) BOOL forbiden;
 @property (assign,nonatomic) CGPoint tmpOffset;
 
 @property (strong,nonatomic) ScrollPageView *tmpVisibleTopPageView;
@@ -55,6 +54,7 @@
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _scrollView.bounces = NO;
         _scrollView.pagingEnabled = NO;
+        _scrollView.directionalLockEnabled = YES;
         _scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
         _scrollView.delegate = self;
         _scrollView.contentSize = frame.size;
@@ -109,6 +109,30 @@
         [self.delegate scrollVerticalView:self refreshScrollHeader:self.scrollHeader andRefreshScrollFooter:self.scrollFooter withCurrentPageVC:oldPageView.pageVC];
     }
 }
+
+#pragma mark - 外部调用接口
+
+-(BOOL)isFlipAnimating{
+    return self.scrollView.isDecelerating| self.scrollView.isDragging;
+}
+
+-(NSArray*)getAllPageVCs{
+    NSArray *allPageViews = [self getAllPageViews];
+    NSMutableArray *pageVCs = @[].mutableCopy;
+    for (ScrollPageView *sub in allPageViews) {
+        [pageVCs addObject:sub.pageVC];
+    }
+    return pageVCs;
+}
+
+-(XXSYPageViewController*)getVisibleBottomPageVC{
+    return [[self getVisibleBottomPageView] pageVC];
+}
+-(XXSYPageViewController*)getVisibleTopPageVC{
+    return [[self getVisibleTopPageView] pageVC];
+}
+
+
 
 #pragma mark - scroll View delegate
 
@@ -303,19 +327,6 @@
     [pageVC didMoveToBackWithDirection:direction];
 }
 
--(NSArray*)getAllPageVCs{
-    NSArray *allPageViews = [self getAllPageViews];
-    NSMutableArray *pageVCs = @[].mutableCopy;
-    for (ScrollPageView *sub in allPageViews) {
-        [pageVCs addObject:sub.pageVC];
-    }
-    return pageVCs;
-}
-
--(XXSYPageViewController*)getCurrentPageVC{
-    return [[self getVisibleTopPageView] pageVC];
-}
-
 #pragma mark - scrollView helpers
 -(ScrollPageView*)subPageViewAtOffset:(CGPoint)offset{
     ScrollPageView *needView = nil;
@@ -442,7 +453,5 @@
     return animationView;
 }
 
--(BOOL)isFlipAnimating{
-    return self.scrollView.isDecelerating| self.scrollView.isDragging;
-}
+
 @end

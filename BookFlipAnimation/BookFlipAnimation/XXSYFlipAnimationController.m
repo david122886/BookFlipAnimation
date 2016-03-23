@@ -117,6 +117,21 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     return childern;
 }
 
+///上下拖动翻页需要区分
+-(XXSYPageViewController*)getCurrentPageVCForAfter{
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        return [self.scrollVFlipView getVisibleBottomPageVC];
+    }
+    return [self currentPageVC];
+}
+///上下拖动翻页需要区分
+-(XXSYPageViewController*)getCurrentPageVCForBefore{
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        return [self.scrollVFlipView getVisibleTopPageVC];
+    }
+    return [self currentPageVC];
+}
+
 -(XXSYPageViewController*)currentPageVC{
     XXSYPageViewController *currentPageVC = nil;
     if (self.animationType == FlipAnimationType_auto) {
@@ -136,7 +151,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         currentPageVC = [self getCurlFlipCurrentPageVC];
     }
     if (self.animationType == FlipAnimationType_scroll_V) {
-        currentPageVC = [self.scrollVFlipView getCurrentPageVC];
+        currentPageVC = [self.scrollVFlipView getVisibleTopPageVC];
     }
     return currentPageVC;
 }
@@ -909,6 +924,9 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - 自动翻页设置
 -(void)startAutoReadWithSpeed:(CGFloat)speed{
+    if ([self isAnimating]) {
+        return;
+    }
     if (self.autoReadStatus == AutoReadStatus_beginning || self.autoReadStatus == AutoReadStatus_pause) {
         return;
     }

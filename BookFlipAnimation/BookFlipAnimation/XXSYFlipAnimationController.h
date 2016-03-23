@@ -88,7 +88,11 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 -(void)registerScrollFooter:(Class)scrollFooter;
 
 -(NSArray*)childenPageControllers;
--(XXSYPageViewController*)currentPageVC;
+///上下拖动翻页需要区分
+-(XXSYPageViewController*)getCurrentPageVCForAfter;
+///上下拖动翻页需要区分
+-(XXSYPageViewController*)getCurrentPageVCForBefore;
+
 -(void)setupInitPageViewController:(XXSYPageViewController*)pageVC withFlipAnimationType:(FlipAnimationType)animationType;
 #pragma mark -
 
