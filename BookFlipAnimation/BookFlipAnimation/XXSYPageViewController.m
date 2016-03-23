@@ -39,11 +39,11 @@
 #pragma mark - Page protocol
 
 -(void)willMoveToFront{
-    
+    _isVisible = YES;
 }
 
 -(void)didCancelMoveToFront{
-    
+    _isVisible = NO;
 }
 
 -(void)didMoveToFrontWithDirection:(FlipAnimationDirection)flipDirection{
@@ -55,10 +55,10 @@
 }
 
 -(void)didCancelMoveToBack{
-    
+    _isVisible = YES;
 }
 -(void)didMoveToBackWithDirection:(FlipAnimationDirection)flipDirection{
-    
+    _isVisible = NO;
 }
 
 ///背景颜色

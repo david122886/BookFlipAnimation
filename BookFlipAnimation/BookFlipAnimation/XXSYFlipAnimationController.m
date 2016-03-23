@@ -111,10 +111,19 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 -(NSArray*)childenPageControllers{
     NSMutableArray *childern = @[].mutableCopy;
-    for (PageAnimationView *sub in self.reusePageAnimationViewArray) {
-        [childern addObject:sub.pageVC];
+    if (self.animationType == FlipAnimationType_scroll || self.animationType == FlipAnimationType_cover || self.animationType == FlipAnimationType_auto) {
+        for (PageAnimationView *sub in self.reusePageAnimationViewArray) {
+            [childern addObject:sub.pageVC];
+        }
+        return childern;
     }
-    return childern;
+    if (self.animationType == FlipAnimationType_curl) {
+        return [self.curlPageViewController viewControllers];
+    }
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        return [self.scrollVFlipView getAllPageVCs];
+    }
+    return nil;
 }
 
 ///上下拖动翻页需要区分

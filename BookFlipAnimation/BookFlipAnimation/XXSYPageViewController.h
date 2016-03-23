@@ -15,6 +15,9 @@
 ///是否正在进行翻页动画
 @property (assign,nonatomic,readonly) BOOL isFlipAnimating;
 
+///是否可见
+@property (assign,nonatomic,readonly) BOOL isVisible;
+
 @property (assign,nonatomic,readonly) FlipAnimationType animationType;
 
 @end

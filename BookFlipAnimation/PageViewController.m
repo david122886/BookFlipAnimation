@@ -35,11 +35,15 @@
 }
 
 -(void)willMoveToFront{
+    [super willMoveToFront];
+    
     [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
     NSLog(@"%ld-%@- willMoveToFront",self.index,self.isBack?@"Back":@"Front");
 }
 
 -(void)didMoveToFrontWithDirection:(FlipAnimationDirection)flipDirection{
+    [super didMoveToFrontWithDirection:flipDirection];
+    
     NSString *direction = nil;
     switch (flipDirection) {
         case FlipAnimationDirection_FromLeftToRight:
@@ -62,6 +66,8 @@
 }
 
 -(void)didCancelMoveToFront{
+    [super didCancelMoveToFront];
+    
     NSLog(@"%ld-%@- didCancelMoveToFront",self.index,self.isBack?@"Back":@"Front");
 
 //    self.index = 0;
@@ -70,11 +76,15 @@
 
 
 -(void)willMoveToBack{
+    [super willMoveToBack];
+    
     NSLog(@"%ld-%@- willMoveToBack",self.index,self.isBack?@"Back":@"Front");
 
 }
 
 -(void)didMoveToBackWithDirection:(FlipAnimationDirection)flipDirection{
+    [super didMoveToBackWithDirection:flipDirection];
+    
     NSString *direction = nil;
     switch (flipDirection) {
         case FlipAnimationDirection_FromLeftToRight:
@@ -100,12 +110,16 @@
 }
 
 -(void)didCancelMoveToBack{
+    [super didCancelMoveToBack];
+    
     NSLog(@"%ld-%@- didCancelMoveToBack",self.index,self.isBack?@"Back":@"Front");
 
 //    [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
 }
 
 -(void)clearAllPageData{
+    [super clearAllPageData];
+    
     NSLog(@"%ld-%@- clearAllPageData",self.index,self.isBack?@"Back":@"Front");
 
 //    self.index = 0;
