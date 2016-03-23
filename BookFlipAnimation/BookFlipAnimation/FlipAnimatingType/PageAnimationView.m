@@ -69,7 +69,8 @@
         
         _pageVC = pageVC;
         _pageVC.view.frame = [PageAnimationView pageViewFrameWithShadowPosion:shadowPosion];
-        _pageVC.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+//        _pageVC.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _pageVC.view.autoresizingMask = UIViewAutoresizingNone;///自动阅读pageVC.view不会跟着跑
         [_containerView addSubview:pageVC.view];
         
         _shadowPosion = ShadowPosion_None;

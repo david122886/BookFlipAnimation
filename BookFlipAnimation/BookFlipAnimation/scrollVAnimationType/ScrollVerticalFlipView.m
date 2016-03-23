@@ -312,6 +312,10 @@
     return pageVCs;
 }
 
+-(XXSYPageViewController*)getCurrentPageVC{
+    return [[self getVisibleTopPageView] pageVC];
+}
+
 #pragma mark - scrollView helpers
 -(ScrollPageView*)subPageViewAtOffset:(CGPoint)offset{
     ScrollPageView *needView = nil;

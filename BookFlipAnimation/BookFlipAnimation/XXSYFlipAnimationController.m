@@ -69,6 +69,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 @property (strong,nonatomic) XXSYPageViewController *tmpBackPageVC;
 
 @property (strong,nonatomic) ScrollVerticalFlipView *scrollVFlipView;
+
 @end
 
 @implementation XXSYFlipAnimationController
@@ -117,8 +118,27 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(XXSYPageViewController*)currentPageVC{
-    PageAnimationView *animationView = [self getCurrentPageAnimationView];
-    return animationView.pageVC;
+    XXSYPageViewController *currentPageVC = nil;
+    if (self.animationType == FlipAnimationType_auto) {
+        currentPageVC= [[self getCurrentPageAnimationView] pageVC];
+        return currentPageVC;
+    }
+    
+    if (self.isAnimating) {
+        NSAssert(NO, @"正在动画效果，无法获取正确currrentPageVC");
+        return nil;
+    }
+    
+    if (self.animationType == FlipAnimationType_cover || self.animationType == FlipAnimationType_scroll) {
+        currentPageVC= [[self getCurrentPageAnimationView] pageVC];
+    }
+    if (self.animationType == FlipAnimationType_curl) {
+        currentPageVC = [self getCurlFlipCurrentPageVC];
+    }
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        currentPageVC = [self.scrollVFlipView getCurrentPageVC];
+    }
+    return currentPageVC;
 }
 
 -(void)setupInitPageViewController:(XXSYPageViewController*)pageVC withFlipAnimationType:(FlipAnimationType)animationType{
@@ -132,7 +152,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         [self setupInitPageViewControllerForCurl:pageVC];
         return;
     }
-    if (animationType == FlipAnimationType_cover || animationType == FlipAnimationType_scroll) {
+    if (animationType == FlipAnimationType_cover || animationType == FlipAnimationType_scroll || animationType == FlipAnimationType_auto) {
         [self setupInitPageViewControllerForCoverAndScroll:pageVC];
         return;
     }
@@ -169,9 +189,39 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     [self.panGesture setEnabled:YES];
 }
 
+-(void)destroyPageViewControllerForCoverAndScroll{
+    if ([self isAnimating]) {
+        return;
+    }
+    
+    for (PageAnimationView *sub in self.reusePageAnimationViewArray) {
+        XXSYPageViewController *pageVC = sub.pageVC;
+        [pageVC willMoveToParentViewController:nil];
+        [pageVC removeFromParentViewController];
+        [sub removeFromSuperview];
+        [pageVC didMoveToParentViewController:nil];
+    }
+    [self.reusePageAnimationViewArray removeAllObjects];
+    
+}
+
 -(void)setupInitPageViewControllerForCurl:(XXSYPageViewController*)pageVC{
     [self.panGesture setEnabled:NO];
     [self setupCurlPageViewControllerWithPageVC:pageVC];
+}
+
+-(void)destroyPageViewControllerForCurl{
+    if ([self isAnimating]) {
+        return;
+    }
+    
+    [self.curlPageViewController willMoveToParentViewController:nil];
+    [self.curlPageViewController.view removeFromSuperview];
+    [self.curlPageViewController removeFromParentViewController];
+    [self.curlPageViewController didMoveToParentViewController:nil];
+    
+    self.curlPageViewController = nil;
+    
 }
 
 -(void)setupInitPageViewControllerForScroll_V:(XXSYPageViewController*)pageVC{
@@ -189,6 +239,37 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     self.scrollVFlipView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
 }
 
+-(void)destroyPageViewControllerForScroll_V{
+    if ([self isAnimating]) {
+        return;
+    }
+    NSArray *pageVCs = [self.scrollVFlipView getAllPageVCs];
+    for (XXSYPageViewController *pageVC in pageVCs) {
+        [pageVC willMoveToParentViewController:nil];
+        [pageVC removeFromParentViewController];
+        [pageVC didMoveToParentViewController:nil];
+    }
+    [self.scrollVFlipView removeFromSuperview];
+    self.scrollVFlipView = nil;
+}
+
+-(void)destroyOtherAnimationTypePageVCWithCurrentFlipType:(FlipAnimationType)flipType{
+    if (flipType == FlipAnimationType_auto || flipType == FlipAnimationType_cover || flipType == FlipAnimationType_scroll) {
+        [self destroyPageViewControllerForCurl];
+        [self destroyPageViewControllerForScroll_V];
+        return;
+    }
+    if (flipType == FlipAnimationType_scroll_V) {
+        [self destroyPageViewControllerForCurl];
+        [self destroyPageViewControllerForCoverAndScroll];
+        return;
+    }
+    if (flipType == FlipAnimationType_curl) {
+        [self destroyPageViewControllerForScroll_V];
+        [self destroyPageViewControllerForCoverAndScroll];
+        return;
+    }
+}
 #pragma mark - helpers
 -(void)setupGestureRecognizers{
     UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureCallback:)];
@@ -337,8 +418,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 #pragma mark - Gesture Helpers
 -(void)tapGestureBeforeAnimationBegining:(UITapGestureRecognizer *)tapGesture{
-//    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadBeforePageVC]:[self getNeedLoadAfterPageVC];
-//    XXSYPageViewController *currentPageVC = [self currentPageVC];
     PageAnimationView *needPageAnimationView = [self touchFromLeftToRightIsAfter]?[self getNeedLoadBeforePageAnimationView]:[self getNeedLoadAfterPageAnimationView];
     PageAnimationView *currentPageAnimationView = [self getCurrentPageAnimationView];
     if (!needPageAnimationView) {
@@ -383,8 +462,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)tapGestureAfterAnimationBegining:(UITapGestureRecognizer *)tapGesture{
-//    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadAfterPageVC]:[self getNeedLoadBeforePageVC];
-//    XXSYPageViewController *currentPageVC = [self currentPageVC];
     PageAnimationView *needPageAnimationView = [self touchFromLeftToRightIsAfter]?[self getNeedLoadAfterPageAnimationView]:[self getNeedLoadBeforePageAnimationView];
     PageAnimationView *currentPageAnimationView = [self getCurrentPageAnimationView];
     if (!needPageAnimationView) {
@@ -420,8 +497,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(BOOL)panGestureAfterAnimationWillBegin:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
-//    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadAfterPageVC]:[self getNeedLoadBeforePageVC];
-//    XXSYPageViewController *currentPageVC = [self currentPageVC];
     PageAnimationView *needPageAnimationView = [self touchFromLeftToRightIsAfter]?[self getNeedLoadAfterPageAnimationView]:[self getNeedLoadBeforePageAnimationView];
     PageAnimationView *currentPageAnimationView = [self getCurrentPageAnimationView];
     
@@ -450,8 +525,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(BOOL)panGestureBeforeAnimationWillBegin:(UIPanGestureRecognizer *)panGesture withFlipDirection:(FlipAnimationDirection)direction{
-//    XXSYPageViewController *needPageVC = [self touchFromLeftToRightIsAfter]?[self getNeedLoadBeforePageVC]:[self getNeedLoadAfterPageVC];
-//    XXSYPageViewController *currentPageVC = [self currentPageVC];
     PageAnimationView *needPageAnimationView = [self touchFromLeftToRightIsAfter]?[self getNeedLoadBeforePageAnimationView]:[self getNeedLoadAfterPageAnimationView];
     PageAnimationView *currentPageAnimationView = [self getCurrentPageAnimationView];
     if (!needPageAnimationView) {
@@ -1146,10 +1219,40 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 
 -(void)changeFlipAnimationType:(FlipAnimationType)animationType{
-    _animationType = animationType;
-    for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
-        [pageView.pageVC animationTypeChanged:animationType];
+    if (self.isAnimating || self.animationType == animationType) {
+        return;
     }
+    
+    XXSYPageViewController *currentPageVC = [self currentPageVC];
+    
+    FlipAnimationType oldType = self.animationType;
+    _animationType = animationType;///必须要
+    
+    if (animationType == FlipAnimationType_auto) {
+        if (oldType == FlipAnimationType_cover || oldType == FlipAnimationType_scroll) {
+            for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
+                [pageView.pageVC animationTypeChanged:animationType];
+            }
+            return;
+        }
+    }
+    
+    if (animationType == FlipAnimationType_cover || animationType == FlipAnimationType_scroll) {
+        if (oldType == FlipAnimationType_auto) {
+            for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
+                [pageView.pageVC animationTypeChanged:animationType];
+            }
+            return;
+        }
+    }
+    
+    XXSYPageViewController *needPageVC = [[self.currentPageVCClass alloc] init];
+    [needPageVC copyPageVCDataWithVC:currentPageVC withIsDrawBack:currentPageVC.isDrawBackForFlipCurl];
+    [self setupInitPageViewController:needPageVC withFlipAnimationType:animationType];
+    [self destroyOtherAnimationTypePageVCWithCurrentFlipType:animationType];
+    
+    [currentPageVC  animationTypeChanged:animationType];
+
 }
 
 -(void)setCustomVisualAnimationBlock:(void (^)(XXSYFlipAnimationController *animationController,NSArray *allAnimationViewsStack,FlipAnimationDirection originDirection,FlipAnimationDirection finalDirection,CGRect currentViewOriginRect,CGPoint translatePoint))visualAnimationBlock

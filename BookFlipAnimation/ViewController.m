@@ -114,7 +114,7 @@
     PageViewController *vc = [[PageViewController alloc] init];
     vc.index = 0;
     vc.view.backgroundColor = [UIColor greenColor];
-    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_scroll_V];
+    [self.animationController setupInitPageViewController:vc withFlipAnimationType:FlipAnimationType_cover];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -192,6 +192,24 @@
 }
 
 
+- (IBAction)exchangeFlipType:(UIButton *)sender {
+    FlipAnimationType type = FlipAnimationType_scroll_V;
+    int value = arc4random()%4;
+    switch (value) {
+        case 0:
+            type = FlipAnimationType_cover;
+            break;
+        case 1:
+            type = FlipAnimationType_scroll;
+            break;
+        case 2:
+            type = FlipAnimationType_curl;
+            break;
+        default:
+            break;
+    }
+    [self.animationController changeFlipAnimationType:type];
+}
 
 #pragma mark - ScrollVerticalFlipViewDataSource
 -(XXSYPageViewController *)scrollVerticalView:(ScrollVerticalFlipView *)scrollView refreshAfterPageVCWithReusePageVC:(XXSYPageViewController *)reusePageVC withCurrentPageVC:(XXSYPageViewController *)currentPageVC{

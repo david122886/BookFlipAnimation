@@ -42,4 +42,5 @@
 
 -(BOOL)isFlipAnimating;
 -(NSArray*)getAllPageVCs;
+-(XXSYPageViewController*)getCurrentPageVC;
 @end
