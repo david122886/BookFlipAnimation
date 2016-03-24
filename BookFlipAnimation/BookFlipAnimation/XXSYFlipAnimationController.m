@@ -197,6 +197,10 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 }
 #pragma mark - init helpers
 -(void)setupInitPageViewControllerForCoverAndScroll:(XXSYPageViewController*)pageVC{
+    if (self.reusePageAnimationViewArray.count > 0) {
+        return;
+    }
+    
     PageAnimationView *needView = [[PageAnimationView alloc] initWithShadowPosion:[self pageShadowPosionWithFlipType:self.animationType] withPageVC:pageVC];
     
     [self movePageAnimationViewToParent:needView];
@@ -1279,8 +1283,8 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     FlipAnimationType oldType = self.animationType;
     _animationType = animationType;///必须要
     
-    if (animationType == FlipAnimationType_auto) {
-        if (oldType == FlipAnimationType_cover || oldType == FlipAnimationType_scroll) {
+    if (oldType == FlipAnimationType_auto || oldType == FlipAnimationType_cover || oldType == FlipAnimationType_scroll) {
+        if (animationType == FlipAnimationType_auto || animationType == FlipAnimationType_cover || animationType == FlipAnimationType_scroll) {
             for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
                 [pageView.pageVC animationTypeChanged:animationType];
             }
@@ -1288,14 +1292,6 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         }
     }
     
-    if (animationType == FlipAnimationType_cover || animationType == FlipAnimationType_scroll) {
-        if (oldType == FlipAnimationType_auto) {
-            for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
-                [pageView.pageVC animationTypeChanged:animationType];
-            }
-            return;
-        }
-    }
     
     XXSYPageViewController *needPageVC = [[self.currentPageVCClass alloc] init];
     [needPageVC copyPageVCDataWithVC:currentPageVC withIsDrawBack:currentPageVC.isDrawBackForFlipCurl];

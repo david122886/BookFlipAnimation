@@ -46,5 +46,5 @@
 -(XXSYPageViewController*)getVisibleBottomPageVC;
 -(XXSYPageViewController*)getVisibleTopPageVC;
 
-
+-(void)resetScrollViewWithPageVC:(XXSYPageViewController*)pageVC;
 @end

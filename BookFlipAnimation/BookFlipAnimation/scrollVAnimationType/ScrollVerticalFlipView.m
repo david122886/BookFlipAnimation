@@ -66,22 +66,10 @@
         _scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
         _scrollView.delegate = self;
         _scrollView.contentSize = frame.size;
-        _scrollView.contentSize = (CGSize){CGRectGetWidth(_scrollView.frame),CGRectGetHeight(_scrollView.frame)+1};
         _scrollView.backgroundColor = [UIColor clearColor];
         [self addSubview:_scrollView];
         
-        ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:(CGRect){0,0,_scrollView.frame.size} withPageVC:pageVC];
-        [_scrollView addSubview:animationView];
-        
-        _tmpCallBackBottomPageView = animationView;
-        [self pageVCBeginningWithNeedPageVC:pageVC withCurrentPageVC:nil];
-        [self pageVCDidFinishedWithNeedPageVC:pageVC withCurrentPageVC:nil withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
-;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setupScrollOffset];
-            });
-        });
+        [self resetScrollViewWithPageVC:pageVC];
     }
     return self;
 }
@@ -150,6 +138,40 @@
     return [[self getVisibleTopPageView] pageVC];
 }
 
+
+-(void)resetScrollViewWithPageVC:(XXSYPageViewController*)pageVC{
+    if (!pageVC) {
+        return;
+    }
+    NSArray *allViews = [self getAllPageViews];
+    ScrollPageView *animationView = nil;
+    for (ScrollPageView *sub in allViews) {
+        if (sub.pageVC == pageVC) {
+            animationView = sub;
+        }
+        [sub removeFromSuperview];
+    }
+    if (!animationView) {
+        animationView = [[ScrollPageView alloc] initWithFrame:(CGRect){0,0,_scrollView.frame.size} withPageVC:pageVC];
+    }else{
+        animationView.frame = (CGRect){0,0,_scrollView.frame.size};
+    }
+    
+    [_scrollView addSubview:animationView];
+    
+    _scrollView.contentSize = (CGSize){CGRectGetWidth(_scrollView.frame),CGRectGetHeight(_scrollView.frame)+1};
+
+    _tmpCallBackBottomPageView = animationView;
+    [self pageVCBeginningWithNeedPageVC:pageVC withCurrentPageVC:nil];
+    [self pageVCDidFinishedWithNeedPageVC:pageVC withCurrentPageVC:nil withAnimationDirection:FlipAnimationDirection_FromLeftToRight];
+    ;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setupScrollOffset];
+        });
+    });
+    
+}
 
 
 #pragma mark - scroll View delegate
