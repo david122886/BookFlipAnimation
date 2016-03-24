@@ -78,6 +78,8 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     [super viewDidLoad];
     
     [self setupGestureRecognizers];
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:YES];
     // Do any additional setup after loading the view.
 }
 
@@ -139,6 +141,14 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         return [self.scrollVFlipView getVisibleTopPageVC];
     }
     return [self currentPageVC];
+}
+
+-(CGSize)getPageContentSize{
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        return (CGSize){CGRectGetWidth(rect),CGRectGetHeight(rect) - kPageHeaderHeight*2};
+    }
+    return rect.size;
 }
 
 -(XXSYPageViewController*)currentPageVC{

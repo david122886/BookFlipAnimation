@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/scrollVAnimationType/ScrollVerticalFlipView.m"
-            timestampString = "480478106.351601"
+            timestampString = "480483726.752969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
             landmarkName = "-loadTopWithVisibleTopPageView:"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "480412466.189044"
+            timestampString = "480490917.827549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1249"
-            endingLineNumber = "1249"
+            startingLineNumber = "1273"
+            endingLineNumber = "1273"
             landmarkName = "-changeFlipAnimationType:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "480412466.189044"
+            timestampString = "480490917.827549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "-setupInitPageViewController:withFlipAnimationType:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "480412466.189044"
+            timestampString = "480490917.827549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "-destroyOtherAnimationTypePageVCWithCurrentFlipType:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BookFlipAnimation/BookFlipAnimation/XXSYFlipAnimationController.m"
-            timestampString = "480412466.189044"
+            timestampString = "480490917.827549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "-setupInitPageViewControllerForCoverAndScroll:"
             landmarkType = "5">
          </BreakpointContent>

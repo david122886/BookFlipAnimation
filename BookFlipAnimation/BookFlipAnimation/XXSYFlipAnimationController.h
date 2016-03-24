@@ -93,6 +93,8 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 ///上下拖动翻页需要区分
 -(XXSYPageViewController*)getCurrentPageVCForBefore;
 
+-(CGSize)getPageContentSize;
+
 -(void)setupInitPageViewController:(XXSYPageViewController*)pageVC withFlipAnimationType:(FlipAnimationType)animationType;
 #pragma mark -
 
