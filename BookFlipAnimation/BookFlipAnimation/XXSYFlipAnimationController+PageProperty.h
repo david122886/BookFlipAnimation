@@ -11,8 +11,7 @@
  * 页面文本排版调用
  */
 @interface XXSYFlipAnimationController (PageProperty)
-///背景颜色
--(void)resetBackGroundColorWithProperty:(ReadDataProperty*)readProperty;
+
 ///字体大小
 -(void)resetFontSizeWithProperty:(ReadDataProperty*)readProperty;
 ///字体改变

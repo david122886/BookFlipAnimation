@@ -11,11 +11,16 @@
 @interface XXSYPageViewController ()
 ///是否是反面页,仿真翻页专用
 @property (assign,nonatomic,readonly) BOOL isPaperBack;
+@property (strong,nonatomic) UIImageView *backImageView;
 @end
 
 @implementation XXSYPageViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.backImageView = [[UIImageView alloc] initWithFrame:(CGRect){0,0,self.view.frame.size}];
+    [self.view addSubview:self.backImageView];
+    self.backImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.backImageView.backgroundColor = [UIColor clearColor];
     // Do any additional setup after loading the view.
 }
 
@@ -63,7 +68,11 @@
 
 ///背景颜色
 -(void)pageBackGroundColorChangedWithProperty:(ReadDataProperty*)readProperty{
-    
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        self.backImageView.image = nil;
+        self.backImageView.backgroundColor = [UIColor clearColor];
+        return;
+    }
 }
 ///字体大小
 -(void)pageFontSizeChangedWithProperty:(ReadDataProperty*)readProperty{

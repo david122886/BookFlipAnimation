@@ -134,7 +134,8 @@
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
     NSInteger index = [(PageViewController*)currentPageVC index];
     [(PageViewController*)reusePageVC setIndex:index-1];
-    reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
+//    reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
+    reusePageVC.view.backgroundColor = [UIColor clearColor];
     return reusePageVC;
 }
 
@@ -143,6 +144,8 @@
     NSInteger index = [(PageViewController*)currentPageVC index];
     reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
     [(PageViewController*)reusePageVC setIndex:index+1];
+    reusePageVC.view.backgroundColor = [UIColor clearColor];
+
     return reusePageVC;
     
 }

@@ -1056,6 +1056,20 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
 
 }
 
+#pragma mark - 背景颜色设置
+///背景颜色
+-(void)resetBackGroundColorWithProperty:(ReadDataProperty*)readProperty{
+    NSArray *allPagesArr = [self childenPageControllers];
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        [self.scrollVFlipView setupBackgroundColorORImage:nil];
+    }
+    
+    for (XXSYPageViewController *pageVC in allPagesArr) {
+        if ([pageVC respondsToSelector:@selector(pageBackGroundColorChangedWithProperty:)]) {
+            [pageVC pageBackGroundColorChangedWithProperty:readProperty];
+        };
+    }
+}
 #pragma mark - 仿真翻页
 -(void)setupCurlPageViewControllerWithPageVC:(XXSYPageViewController*)pageVC{
     

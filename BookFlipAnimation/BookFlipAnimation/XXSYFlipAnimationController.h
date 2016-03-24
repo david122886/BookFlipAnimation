@@ -133,4 +133,9 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 -(void)pauseAutoRead;
 -(void)resumeAutoRead;
 -(void)setupSpeed:(CGFloat)speed;
+
+#pragma mark - 背景颜色设置
+///背景颜色
+-(void)resetBackGroundColorWithProperty:(ReadDataProperty*)readProperty;
+
 @end

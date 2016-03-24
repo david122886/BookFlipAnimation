@@ -9,15 +9,6 @@
 #import "XXSYFlipAnimationController+PageProperty.h"
 
 @implementation XXSYFlipAnimationController (PageProperty)
-///背景颜色
--(void)resetBackGroundColorWithProperty:(ReadDataProperty*)readProperty{
-    NSArray *pageVCS = [self childenPageControllers];
-    for (XXSYPageViewController *pageVC in pageVCS) {
-        if ([pageVCS respondsToSelector:@selector(pageBackGroundColorChangedWithProperty:)]) {
-            [pageVC pageBackGroundColorChangedWithProperty:readProperty];
-        }
-    }
-}
 
 ///字体大小
 -(void)resetFontSizeWithProperty:(ReadDataProperty*)readProperty{

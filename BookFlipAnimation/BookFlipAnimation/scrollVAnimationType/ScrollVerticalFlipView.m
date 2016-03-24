@@ -20,6 +20,7 @@
         _pageVC = pageVC;
         _pageVC.view.frame = (CGRect){0,0,frame.size};
         _pageVC.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        self.backgroundColor = [UIColor clearColor];
         [self addSubview:pageVC.view];
     }
     return self;
@@ -41,6 +42,8 @@
 @property (strong,nonatomic) ScrollPageView *tmpCallBackTopPageView;
 @property (strong,nonatomic) ScrollPageView *tmpCallBackBottomPageView;
 
+@property (strong,nonatomic) UIImageView *backImageView;
+
 @end
 @implementation ScrollVerticalFlipView
 
@@ -49,6 +52,11 @@
     if (self) {
         _dataSource = dataSource;
         _pageVCClass = pageVCClass;
+        
+        _backImageView = [[UIImageView alloc] initWithFrame:(CGRect){0,0,frame.size}];
+        _backImageView.backgroundColor = [UIColor clearColor];
+        _backImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        [self addSubview:_backImageView];
         
         _scrollView = [[UIScrollView alloc] initWithFrame:(CGRect){0,kPageHeaderHeight,CGRectGetWidth(frame),CGRectGetHeight(frame)-kPageHeaderHeight*2}];
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
@@ -59,6 +67,7 @@
         _scrollView.delegate = self;
         _scrollView.contentSize = frame.size;
         _scrollView.contentSize = (CGSize){CGRectGetWidth(_scrollView.frame),CGRectGetHeight(_scrollView.frame)+1};
+        _scrollView.backgroundColor = [UIColor clearColor];
         [self addSubview:_scrollView];
         
         ScrollPageView *animationView = [[ScrollPageView alloc] initWithFrame:(CGRect){0,0,_scrollView.frame.size} withPageVC:pageVC];
@@ -84,9 +93,9 @@
     _scrollHeader = headerClass?[[headerClass alloc] init]:[[UIView alloc] init];
     _scrollHeader.frame = (CGRect){0,0,CGRectGetWidth(self.frame),kPageHeaderHeight};
     _scrollHeader.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    _scrollHeader.backgroundColor = [UIColor clearColor];
     [self addSubview:_scrollHeader];
     
-    self.scrollHeader.backgroundColor = [UIColor purpleColor];
 }
 
 -(void)registerScrollFooter:(Class)footerClass{
@@ -95,11 +104,20 @@
     }
     _scrollFooter = footerClass?[[footerClass alloc] init]:[[UIView alloc] init];
     _scrollFooter.frame = (CGRect){0,CGRectGetHeight(self.frame)-kPageHeaderHeight,CGRectGetWidth(self.frame),kPageHeaderHeight};
-    _scrollHeader.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    _scrollFooter.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    _scrollFooter.backgroundColor = [UIColor clearColor];
     [self addSubview:_scrollFooter];
-    self.scrollFooter.backgroundColor = [UIColor blueColor];
 }
 
+-(void)setupBackgroundColorORImage:(id)item{
+    if ([item isKindOfClass:[UIColor class]]) {
+        self.backImageView.image = nil;
+        self.backImageView.backgroundColor = item;
+    }else{
+        self.backImageView.backgroundColor = [UIColor clearColor];
+        self.backImageView.image = item;
+    }
+}
 
 -(void)setupScrollOffset{
     _scrollView.contentOffset = (CGPoint){0,1};

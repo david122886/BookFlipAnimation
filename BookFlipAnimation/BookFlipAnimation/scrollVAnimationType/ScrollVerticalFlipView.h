@@ -39,9 +39,12 @@
 
 -(void)registerScrollHeader:(Class)headerClass;
 -(void)registerScrollFooter:(Class)footerClass;
+-(void)setupBackgroundColorORImage:(id)item;
 
 -(BOOL)isFlipAnimating;
 -(NSArray*)getAllPageVCs;
 -(XXSYPageViewController*)getVisibleBottomPageVC;
 -(XXSYPageViewController*)getVisibleTopPageVC;
+
+
 @end

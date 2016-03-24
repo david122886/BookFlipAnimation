@@ -10,7 +10,6 @@
 
 @interface PageViewController ()
 @property (strong,nonatomic) UILabel *text;
-@property (assign,nonatomic) BOOL isBack;
 @end
 
 @implementation PageViewController
@@ -38,7 +37,7 @@
     [super willMoveToFront];
     
     [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
-    NSLog(@"%ld-%@- willMoveToFront",self.index,self.isBack?@"Back":@"Front");
+    NSLog(@"%ld-%@- willMoveToFront",self.index,[self isDrawBackForFlipCurl]?@"Back":@"Front");
 }
 
 -(void)didMoveToFrontWithDirection:(FlipAnimationDirection)flipDirection{
@@ -61,14 +60,14 @@
         default:
             break;
     }
-    NSLog(@"%ld-%@-didMoveToFrontWithDirection:%@",self.index,self.isBack?@"Back":@"front",direction);
+    NSLog(@"%ld-%@-didMoveToFrontWithDirection:%@",self.index,[self isDrawBackForFlipCurl]?@"Back":@"front",direction);
 
 }
 
 -(void)didCancelMoveToFront{
     [super didCancelMoveToFront];
     
-    NSLog(@"%ld-%@- didCancelMoveToFront",self.index,self.isBack?@"Back":@"Front");
+    NSLog(@"%ld-%@- didCancelMoveToFront",self.index,[self isDrawBackForFlipCurl]?@"Back":@"Front");
 
 //    self.index = 0;
 //    self.text.text = nil;
@@ -78,7 +77,7 @@
 -(void)willMoveToBack{
     [super willMoveToBack];
     
-    NSLog(@"%ld-%@- willMoveToBack",self.index,self.isBack?@"Back":@"Front");
+    NSLog(@"%ld-%@- willMoveToBack",self.index,[self isDrawBackForFlipCurl]?@"Back":@"Front");
 
 }
 
@@ -102,7 +101,7 @@
         default:
             break;
     }
-    NSLog(@"%ld-%@-didMoveToBackWithDirection:%@",self.index,self.isBack?@"Back":@"front",direction);
+    NSLog(@"%ld-%@-didMoveToBackWithDirection:%@",self.index,[self isDrawBackForFlipCurl]?@"Back":@"front",direction);
 
 
 //    self.index = 0;
@@ -112,7 +111,7 @@
 -(void)didCancelMoveToBack{
     [super didCancelMoveToBack];
     
-    NSLog(@"%ld-%@- didCancelMoveToBack",self.index,self.isBack?@"Back":@"Front");
+    NSLog(@"%ld-%@- didCancelMoveToBack",self.index,[self isDrawBackForFlipCurl]?@"Back":@"Front");
 
 //    [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
 }
@@ -120,7 +119,7 @@
 -(void)clearAllPageData{
     [super clearAllPageData];
     
-    NSLog(@"%ld-%@- clearAllPageData",self.index,self.isBack?@"Back":@"Front");
+    NSLog(@"%ld-%@- clearAllPageData",self.index,[self isDrawBackForFlipCurl]?@"Back":@"Front");
 
 //    self.index = 0;
 //    self.text.text = nil;
@@ -131,7 +130,6 @@
 -(void)copyPageVCDataWithVC:(id<XXSYPageVCProtocol>)pageVC withIsDrawBack:(BOOL)drawBack{
     [super copyPageVCDataWithVC:pageVC withIsDrawBack:drawBack];
     
-    self.isBack = drawBack;
     PageViewController *needPageVC = (PageViewController*)pageVC;
     self.index = needPageVC.index;
     self.view.backgroundColor = needPageVC.view.backgroundColor;
@@ -139,12 +137,11 @@
         [self.text setText:[NSString stringWithFormat:@"%ld",self.index]];
     }
     
-    NSLog(@"%ld-%@- copyPageVCDataWithVC ",self.index,self.isBack?@"Back":@"Front");
+    NSLog(@"%ld-%@- copyPageVCDataWithVC ",self.index,[self isDrawBackForFlipCurl]?@"Back":@"Front");
 }
 
 -(void)setDrawBackForFlipCurl:(BOOL)drawBack{
     [super setDrawBackForFlipCurl:drawBack];
-    _isBack = drawBack;
     
 }
 /*
