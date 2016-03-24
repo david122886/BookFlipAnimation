@@ -140,7 +140,7 @@
 
 
 -(void)resetScrollViewWithPageVC:(XXSYPageViewController*)pageVC{
-    if (!pageVC) {
+    if (!pageVC || [self isFlipAnimating]) {
         return;
     }
     NSArray *allViews = [self getAllPageViews];

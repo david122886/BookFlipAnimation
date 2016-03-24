@@ -140,4 +140,5 @@ typedef void (^CustomAnimationStatusBlock)(XXSYFlipAnimationController *animatio
 ///背景颜色
 -(void)resetBackGroundColorWithProperty:(ReadDataProperty*)readProperty;
 
+-(void)resetCurrentPageVC:(XXSYPageViewController*)pageVC;
 @end

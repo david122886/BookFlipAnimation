@@ -201,28 +201,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         return;
     }
     
-    PageAnimationView *needView = [[PageAnimationView alloc] initWithShadowPosion:[self pageShadowPosionWithFlipType:self.animationType] withPageVC:pageVC];
-    
-    [self movePageAnimationViewToParent:needView];
-    [self.reusePageAnimationViewArray insertObject:needView atIndex:0];
-    [self.view bringSubviewToFront:needView];
-    [needView setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
-    
-    for (PageAnimationView *pageView in self.reusePageAnimationViewArray) {
-        [pageView.pageVC animationTypeChanged:self.animationType];
-        [pageView.pageVC flipAnimationStatusChanged:NO];
-        
-        if (pageView.pageVC != pageVC) {
-            [pageView.pageVC currentPageVCChanged:NO];
-            [pageView.pageVC willMoveToBack];
-            [pageView.pageVC didMoveToBackWithDirection:FlipAnimationDirection_None];
-        }else{
-            [pageView.pageVC flipAnimationStatusChanged:NO];
-            [pageView.pageVC currentPageVCChanged:YES];
-            [pageView.pageVC willMoveToFront];
-            [pageView.pageVC didMoveToFrontWithDirection:FlipAnimationDirection_None];
-        }
-    }
+    [self resetCoverAndScrollWithCurrentPageVC:pageVC];
     
     [self.panGesture setEnabled:YES];
 }
@@ -308,6 +287,59 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         return;
     }
 }
+
+#pragma mark - reset helpers
+
+-(void)resetCurrentPageVC:(XXSYPageViewController*)pageVC{
+
+    if (self.animationType == FlipAnimationType_scroll_V) {
+        [self.scrollVFlipView resetScrollViewWithPageVC:pageVC];
+        return;
+    }
+    if (self.animationType == FlipAnimationType_auto || self.animationType == FlipAnimationType_scroll || self.animationType == FlipAnimationType_cover) {
+        [self resetCoverAndScrollWithCurrentPageVC:pageVC];
+        return;
+    }
+    if (self.animationType == FlipAnimationType_curl) {
+        [self resetCurlWithCurrentPageVC:pageVC];
+        return;
+    }
+    
+}
+
+-(void)resetCoverAndScrollWithCurrentPageVC:(XXSYPageViewController*)pageVC{
+    if (!pageVC || [self isAnimating]) {
+        return;
+    }
+    [self destroyPageViewControllerForCoverAndScroll];
+    
+    PageAnimationView *needView = [[PageAnimationView alloc] initWithShadowPosion:[self pageShadowPosionWithFlipType:self.animationType] withPageVC:pageVC];
+    
+    [self movePageAnimationViewToParent:needView];
+    [self.reusePageAnimationViewArray insertObject:needView atIndex:0];
+    [self.view bringSubviewToFront:needView];
+    [needView setShadowPosion:[self pageShadowPosionWithFlipType:self.animationType]];
+    
+    [pageVC flipAnimationStatusChanged:NO];
+    [pageVC currentPageVCChanged:YES];
+    [pageVC willMoveToFront];
+    [pageVC didMoveToFrontWithDirection:FlipAnimationDirection_None];
+    
+}
+
+-(void)resetCurlWithCurrentPageVC:(XXSYPageViewController*)pageVC{
+    if (!pageVC || [self isAnimating]) {
+        return;
+    }
+    [pageVC flipAnimationStatusChanged:NO];
+    [pageVC currentPageVCChanged:YES];
+    [pageVC willMoveToFront];
+    
+    [self.curlPageViewController setViewControllers:@[pageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+        [pageVC didMoveToFrontWithDirection:FlipAnimationDirection_None];
+    }];
+}
+
 #pragma mark - helpers
 -(void)setupGestureRecognizers{
     UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureCallback:)];
@@ -1112,13 +1144,7 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
     [self addChildViewController:self.curlPageViewController];
     [self.curlPageViewController didMoveToParentViewController:self];
     
-    [pageVC flipAnimationStatusChanged:NO];
-    [pageVC currentPageVCChanged:YES];
-    [pageVC willMoveToFront];
-    
-    [self.curlPageViewController setViewControllers:@[pageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-        [pageVC didMoveToFrontWithDirection:FlipAnimationDirection_None];
-    }];
+    [self resetCurlWithCurrentPageVC:pageVC];
 }
 
 
