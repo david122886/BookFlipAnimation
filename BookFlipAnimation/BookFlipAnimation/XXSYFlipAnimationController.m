@@ -937,6 +937,8 @@ typedef void (^XXSYFlipGestureCompletionBlock)(XXSYFlipAnimationController * dra
         case UIGestureRecognizerStateCancelled:
      {
          if (self.panAnimationDirection == FlipAnimationDirection_Other) {
+             [panGesture.view setUserInteractionEnabled:YES];
+             [panGesture setEnabled:YES];
              return;
          }
         CGPoint point = [panGesture velocityInView:nil];

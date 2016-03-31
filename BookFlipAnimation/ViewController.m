@@ -122,20 +122,12 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-#pragma mark - XXSYFlipAnimationControllerDelegate
-
-///弹出阅读菜单
--(void)flipAnimationControllerPopupMenu:(XXSYFlipAnimationController*)animationController{
-    
-}
-
 #pragma mark - XXSYFlipAnimationControllerDataSource
 -(XXSYPageViewController*)flipAnimationController:(XXSYFlipAnimationController*)animationController refreshBeforePageVCWithReusePageVC:(XXSYPageViewController*)reusePageVC withCurrentPageVC:(XXSYPageViewController*)currentPageVC{
     NSInteger index = [(PageViewController*)currentPageVC index];
     [(PageViewController*)reusePageVC setIndex:index-1];
     reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
-//    reusePageVC.view.backgroundColor = [UIColor clearColor];
+    //    reusePageVC.view.backgroundColor = [UIColor clearColor];
     return reusePageVC;
 }
 
@@ -144,11 +136,21 @@
     NSInteger index = [(PageViewController*)currentPageVC index];
     reusePageVC.view.backgroundColor = index%2==0?[UIColor redColor]:[UIColor whiteColor];
     [(PageViewController*)reusePageVC setIndex:index+1];
-//    reusePageVC.view.backgroundColor = [UIColor clearColor];
-
+    //    reusePageVC.view.backgroundColor = [UIColor clearColor];
+    
     return reusePageVC;
     
 }
+
+
+
+#pragma mark - XXSYFlipAnimationControllerDelegate
+
+///弹出阅读菜单
+-(void)flipAnimationControllerPopupMenu:(XXSYFlipAnimationController*)animationController{
+    
+}
+
 
 /**
  * @brief 翻页结束时调用
